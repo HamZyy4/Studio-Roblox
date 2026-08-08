@@ -7,6 +7,6 @@
   {
     "title": "AirControl Jump",
     "description": "Script AirContol Agar Movement/Jump Responsif",
-    "file": "data/AirContol.lua"
+    "file": "data/AirControl.lua"
   }
 ]
