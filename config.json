@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Animated Decal Part",
+    "description": "Animasi Decak Fade In & Out.",
+    "file": "data/DecalAnim1.lua"
+  },
+  {
+    "title": "AirControl Jump",
+    "description": "Script AirContol Agar Movement/Jump Responsif",
+    "file": "data/AirContol.lua"
+  }
+]

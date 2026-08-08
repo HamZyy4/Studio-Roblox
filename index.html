@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Studio</title>
+    
+    <!-- Google Fonts: Poppins untuk UI, Fira Code untuk Code Block -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --bg-base: #09090b;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #6366f1; /* Indigo premium */
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --hover-bg: rgba(255, 255, 255, 0.06);
+            --wa-color: #25D366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Mencegah highlight biru saat di-tap di mobile */
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            /* Mencegah teks UI tidak sengaja ter-blok */
+            user-select: none; 
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
+        }
+
+        /* Teks dalam code block TETAP BISA di-select/copy manual */
+        .code-box {
+            user-select: text; 
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Sidebar Glassmorphism */
+        .sidebar {
+            width: 320px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* Custom Image Logo */
+        .brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Gradient Title */
+        .brand h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #a855f7, #6366f1, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #menu-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #menu-list li {
+            padding: 14px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #menu-list li .item-title {
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #menu-list li .item-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        #menu-list li:hover {
+            background: var(--hover-bg);
+            transform: translateX(6px);
+        }
+
+        #menu-list li.active {
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+        }
+
+        #menu-list li.active .item-title {
+            color: var(--accent);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header UI (Kiri: Title, Kanan: Credits & Actions) */
+        .header {
+            padding: 18px 32px;
+            background: transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title i {
+            color: var(--text-secondary);
+        }
+
+        /* Area Kanan Header (Credits, WA, Copy) */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .credits {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-right: 1px solid var(--glass-border);
+            padding-right: 16px;
+        }
+
+        .wa-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(37, 211, 102, 0.1);
+            color: var(--wa-color);
+            border: 1px solid rgba(37, 211, 102, 0.2);
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .wa-btn:hover {
+            background: var(--wa-color);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        button.copy-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0 16px;
+            height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            display: none; /* Muncul via JS */
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        button.copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--accent-glow);
+            background: #4f46e5;
+        }
+
+        .raw-container {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Terminal/Code Block Box */
+        .code-box {
+            background: #0f111a;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            opacity: 0; /* Untuk animasi awal */
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .code-header {
+            background: #151822;
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .mac-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        pre {
+            padding: 24px;
+            margin: 0;
+            overflow: auto;
+            flex: 1;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Animasi Mulus */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: 38%;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+            }
+            .content { height: 62%; }
+            .raw-container { padding: 16px; }
+            .header { padding: 16px; flex-wrap: wrap; gap: 12px; }
+            .credits { display: none; } /* Sembunyikan text credits di HP agar tidak sempit */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <!-- Ganti src="logo.png" sesuai dengan nama file gambar yang kamu miliki di folder -->
+            <img src="logo.png" alt="Logo">
+            <h2>Script Studio</h2>
+        </div>
+        <ul id="menu-list">
+            <!-- Loading state awal -->
+            <li style="text-align: center; color: var(--text-secondary); pointer-events: none;">Memuat list...</li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <!-- HEADER KONTEN UTAMA -->
+        <div class="header">
+            <div class="header-title" id="content-title">
+                <i class="ph ph-file-text"></i> <span>Pilih script</span>
+            </div>
+            
+            <!-- TOMBOL WA, CREDITS & COPY -->
+            <div class="header-actions">
+                <div class="credits">Forkt Community</div>
+                
+                <a href="https://whatsapp.com/channel/0029VbDd3WGCnA7vWfsEBE3y" target="_blank" class="wa-btn" title="Join Saluran WA">
+                    <i class="ph-bold ph-whatsapp-logo"></i>
+                </a>
+                
+                <button id="copy-btn" class="copy-btn" onclick="copyText()">
+                    <i class="ph-bold ph-copy"></i> Salin
+                </button>
+            </div>
+        </div>
+
+        <!-- ISI KODE -->
+        <div class="raw-container">
+            <div class="code-box">
+                <div class="code-header">
+                    <div class="mac-dot dot-red"></div>
+                    <div class="mac-dot dot-yellow"></div>
+                    <div class="mac-dot dot-green"></div>
+                </div>
+                <pre><code id="raw-content">// Script akan muncul di sini...</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuList = document.getElementById('menu-list');
+        const contentTitle = document.querySelector('#content-title span');
+        const rawContent = document.getElementById('raw-content');
+        const copyBtn = document.getElementById('copy-btn');
+        const codeBox = document.querySelector('.code-box');
+
+        async function loadMenu() {
+            try {
+                const response = await fetch('config.json');
+                if (!response.ok) throw new Error('Gagal memuat konfigurasi');
+                
+                const data = await response.json();
+                menuList.innerHTML = ''; // Clear loading text
+                
+                data.forEach((item) => {
+                    const li = document.createElement('li');
+                    
+                    li.innerHTML = `
+                        <div class="item-title"><i class="ph-bold ph-file-code"></i> ${item.title}</div>
+                        ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
+                    `;
+                    
+                    li.onclick = () => loadRawText(item.file, item.title, li);
+                    menuList.appendChild(li);
+                });
+            } catch (error) {
+                menuList.innerHTML = `<li style="color: #ef4444; text-align:center;">Gagal memuat config.json</li>`;
+            }
+        }
+
+        async function loadRawText(fileUrl, title, element) {
+            // Hapus kelas active dari list lain
+            document.querySelectorAll('#menu-list li').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            contentTitle.textContent = "Memuat data...";
+            rawContent.textContent = "Loading...";
+            copyBtn.style.display = 'none';
+            
+            // Re-trigger animasi kemunculan kotak (Cubic Bezier halus)
+            codeBox.style.animation = 'none';
+            codeBox.offsetHeight; /* trigger reflow */
+            codeBox.style.animation = 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+
+            try {
+                const response = await fetch(fileUrl);
+                if (!response.ok) throw new Error('File tidak ditemukan');
+                
+                const textData = await response.text();
+                
+                contentTitle.textContent = title;
+                rawContent.textContent = textData;
+                // Ubah display flex agar sejajar dengan icon WA
+                copyBtn.style.display = 'flex'; 
+            } catch (error) {
+                contentTitle.textContent = title;
+                rawContent.textContent = "// Error: Gagal memuat file teks. Pastikan path file benar.";
+            }
+        }
+
+        function copyText() {
+            const textToCopy = rawContent.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalHTML = copyBtn.innerHTML;
+                copyBtn.innerHTML = `<i class="ph-bold ph-check"></i> Tersalin!`;
+                copyBtn.style.background = '#10b981'; // Berubah hijau
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalHTML;
+                    copyBtn.style.background = ''; // Kembali ke warna asli
+                }, 2000);
+            });
+        }
+
+        // Inisialisasi
+        loadMenu();
+    </script>
+</body>
+</html>
