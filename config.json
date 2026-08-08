@@ -1,12 +1,17 @@
 [
   {
-    "title": "Animated Decal Part",
+    "title": "Animated Decal Part ( Script In Part )",
     "description": "Animasi Decak Fade In & Out.",
     "file": "data/DecalAnim.lua"
   },
   {
-    "title": "AirControl Jump",
+    "title": "AirControl Movement ( SPS )",
     "description": "Script AirContol Agar Movement/Jump Responsif",
     "file": "data/AirControl.lua"
+  },
+  {
+    "title": "Fix Lag/Preload Assets ( SSS )",
+    "description": "Preloading Part,Mesh,Audio,Anim For Optimize Map",
+    "file": "data/PreloadAssets.lua"
   }
 ]
