@@ -1,5 +1,11 @@
 [
   {
+    "title": "Importer RBXM ( Delta )",
+    "description": "Loadstring untuk importer asset RBXM",
+    "type": "loadstring",
+    "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/HamZyy4/Studio-Roblox/refs/heads/main/data/ImportRbxm.lua'))()"
+  },
+  {
     "title": "Animated Decal Part ( Script In Part )",
     "description": "Animasi Decak Fade In & Out.",
     "file": "data/DecalAnim.lua"
