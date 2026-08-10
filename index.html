@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Studio</title>
+    <title>Script Studio - FORKT Community</title>
     
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
@@ -15,8 +18,8 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
-            --accent: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.4);
+            --accent: #a855f7; /* Ungu Premium */
+            --accent-glow: rgba(168, 85, 247, 0.3);
             --hover-bg: rgba(255, 255, 255, 0.06);
             --wa-color: #25D366;
         }
@@ -37,19 +40,23 @@
             overflow: hidden;
             user-select: none; 
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
+                radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.12), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.08), transparent 25%);
         }
 
-        .code-box { user-select: text; }
+        .code-box {
+            user-select: text; 
+        }
 
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
+        /* Sidebar Glassmorphism */
         .sidebar {
-            width: 320px;
+            width: 340px;
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -59,64 +66,29 @@
             z-index: 10;
         }
 
-        /* Layout Brand & Refresh Button */
         .brand {
             padding: 24px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 14px;
             border-bottom: 1px solid var(--glass-border);
         }
 
-        .brand-logo-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .brand img {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 10px;
             object-fit: cover;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .brand h2 {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             background: linear-gradient(135deg, #a855f7, #6366f1, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-
-        /* Tombol Refresh Khusus */
-        .refresh-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 1.1rem;
-        }
-
-        .refresh-btn:hover {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-            transform: rotate(180deg);
-            box-shadow: 0 4px 12px var(--accent-glow);
-        }
-
-        .refresh-btn:active {
-            transform: rotate(360deg) scale(0.9);
         }
 
         #menu-list {
@@ -138,7 +110,13 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+        }
+
+        .item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         #menu-list li .item-title {
@@ -149,6 +127,28 @@
             gap: 8px;
         }
 
+        /* Badge tipe di list sidebar */
+        .item-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-script {
+            background: rgba(168, 85, 247, 0.15);
+            color: #d8b4fe;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .badge-loadstring {
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
         #menu-list li .item-desc {
             font-size: 0.8rem;
             color: var(--text-secondary);
@@ -156,16 +156,19 @@
 
         #menu-list li:hover {
             background: var(--hover-bg);
-            transform: translateX(6px);
+            transform: translateX(4px);
         }
 
         #menu-list li.active {
-            background: rgba(99, 102, 241, 0.12);
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            background: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.25);
         }
 
-        #menu-list li.active .item-title { color: var(--accent); }
+        #menu-list li.active .item-title {
+            color: var(--accent);
+        }
 
+        /* Content Area */
         .content {
             flex: 1;
             display: flex;
@@ -190,7 +193,9 @@
             gap: 10px;
         }
 
-        .header-title i { color: var(--text-secondary); }
+        .header-title i {
+            color: var(--text-secondary);
+        }
 
         .header-actions {
             display: flex;
@@ -248,7 +253,7 @@
         button.copy-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px var(--accent-glow);
-            background: #4f46e5;
+            background: #9333ea;
         }
 
         .raw-container {
@@ -259,6 +264,7 @@
             flex-direction: column;
         }
 
+        /* Terminal/Code Block Box */
         .code-box {
             background: #0f111a;
             border: 1px solid var(--glass-border);
@@ -310,6 +316,7 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar {
@@ -329,14 +336,8 @@
 
     <div class="sidebar">
         <div class="brand">
-            <div class="brand-logo-title">
-                <img src="logo.png" alt="Logo">
-                <h2>Script Studio</h2>
-            </div>
-            <!-- Tombol Refresh -->
-            <button class="refresh-btn" onclick="refreshApp()" title="Segarkan Data">
-                <i class="ph-bold ph-arrows-clockwise"></i>
-            </button>
+            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+            <h2>Script Studio</h2>
         </div>
         <ul id="menu-list">
             <li style="text-align: center; color: var(--text-secondary); pointer-events: none;">Memuat list...</li>
@@ -346,7 +347,7 @@
     <div class="content">
         <div class="header">
             <div class="header-title" id="content-title">
-                <i class="ph ph-file-text"></i> <span>Pilih script</span>
+                <i class="ph ph-file-text"></i> <span>Pilih item dari sidebar</span>
             </div>
             
             <div class="header-actions">
@@ -369,7 +370,7 @@
                     <div class="mac-dot dot-yellow"></div>
                     <div class="mac-dot dot-green"></div>
                 </div>
-                <pre><code id="raw-content">// Script akan muncul di sini...</code></pre>
+                <pre><code id="raw-content">-- Pilih item di sebelah kiri untuk melihat isi kodenya...</code></pre>
             </div>
         </div>
     </div>
@@ -381,40 +382,44 @@
         const copyBtn = document.getElementById('copy-btn');
         const codeBox = document.querySelector('.code-box');
 
-        // Fungsi dinamis: selalu mengambil waktu terbaru detik ini juga
-        function getCacheBuster() {
-            return '?t=' + new Date().getTime();
-        }
-
         async function loadMenu() {
-            // Animasi loading di list
-            menuList.innerHTML = '<li style="text-align: center; color: var(--text-secondary); pointer-events: none;">Memuat data...</li>'; 
-
             try {
-                // Memanggil getCacheBuster() agar SELALU ter-update dari server
-                const response = await fetch('config.json' + getCacheBuster());
-                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const response = await fetch('config.json');
+                if (!response.ok) throw new Error('Gagal memuat konfigurasi');
                 
                 const data = await response.json();
-                menuList.innerHTML = ''; 
+                menuList.innerHTML = '';
                 
-                data.forEach((item) => {
+                data.forEach((item, index) => {
                     const li = document.createElement('li');
                     
+                    const isLoadstring = item.type === 'loadstring';
+                    const iconClass = isLoadstring ? 'ph-bold ph-terminal-window' : 'ph-bold ph-file-code';
+                    const badgeText = isLoadstring ? 'Loadstring' : 'Script';
+                    const badgeClass = isLoadstring ? 'badge-loadstring' : 'badge-script';
+                    
                     li.innerHTML = `
-                        <div class="item-title"><i class="ph-bold ph-file-code"></i> ${item.title}</div>
+                        <div class="item-top">
+                            <div class="item-title"><i class="${iconClass}"></i> ${item.title}</div>
+                            <span class="item-badge ${badgeClass}">${badgeText}</span>
+                        </div>
                         ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
                     `;
                     
-                    li.onclick = () => loadRawText(item.file, item.title, li);
+                    li.onclick = () => selectMenuItem(item, li);
                     menuList.appendChild(li);
+
+                    // Otomatis pilih item pertama saat halaman dimuat
+                    if (index === 0) {
+                        selectMenuItem(item, li);
+                    }
                 });
             } catch (error) {
-                menuList.innerHTML = `<li style="color: #ef4444; text-align:center;">Gagal memuat config.json<br><small>(${error.message})</small></li>`;
+                menuList.innerHTML = `<li style="color: #ef4444; text-align:center;">Gagal memuat config.json</li>`;
             }
         }
 
-        async function loadRawText(fileUrl, title, element) {
+        async function selectMenuItem(item, element) {
             document.querySelectorAll('#menu-list li').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
 
@@ -424,36 +429,29 @@
             
             codeBox.style.animation = 'none';
             codeBox.offsetHeight; 
-            codeBox.style.animation = 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+            codeBox.style.animation = 'slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
 
-            try {
-                // Memanggil getCacheBuster() untuk file teks juga
-                const response = await fetch(fileUrl + getCacheBuster());
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP Error ${response.status}: File tidak ditemukan di server.`);
+            if (item.type === 'loadstring') {
+                // Jika tipenya loadstring, langsung tampilkan string kodenya
+                contentTitle.textContent = item.title;
+                rawContent.textContent = item.code || '-- Loadstring belum diisi di config.json';
+                copyBtn.style.display = 'flex';
+            } else {
+                // Jika tipenya script, fetch file .lua nya
+                try {
+                    const response = await fetch(item.file);
+                    if (!response.ok) throw new Error('File tidak ditemukan');
+                    
+                    const textData = await response.text();
+                    contentTitle.textContent = item.title;
+                    rawContent.textContent = textData;
+                    copyBtn.style.display = 'flex'; 
+                } catch (error) {
+                    contentTitle.textContent = item.title;
+                    rawContent.textContent = "-- Error: Gagal memuat file script. Pastikan path file benar di config.json.";
+                    copyBtn.style.display = 'flex';
                 }
-                
-                const textData = await response.text();
-                
-                contentTitle.textContent = title;
-                rawContent.textContent = textData;
-                copyBtn.style.display = 'flex'; 
-            } catch (error) {
-                contentTitle.textContent = title;
-                rawContent.textContent = `// ERROR: Gagal memuat file teks.\n// Detail Error: ${error.message}\n// Path yang diminta: ${fileUrl}\n\n// TIPS:\n// 1. Pastikan file benar-benar ada di GitHub.\n// 2. Cek HURUF BESAR/KECIL pada nama file dan folder (GitHub Case Sensitive).`;
             }
-        }
-
-        // Fungsi untuk mereset tampilan dan memuat ulang list dari server (Action Tombol Refresh)
-        function refreshApp() {
-            // Reset bagian konten ke kondisi awal
-            contentTitle.textContent = "Pilih script";
-            rawContent.textContent = "// Script akan muncul di sini...";
-            copyBtn.style.display = 'none';
-            
-            // Muat ulang menu dengan cache buster baru
-            loadMenu();
         }
 
         function copyText() {
@@ -461,16 +459,15 @@
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalHTML = copyBtn.innerHTML;
                 copyBtn.innerHTML = `<i class="ph-bold ph-check"></i> Tersalin!`;
-                copyBtn.style.background = '#10b981'; 
+                copyBtn.style.background = '#10b981';
                 
                 setTimeout(() => {
                     copyBtn.innerHTML = originalHTML;
-                    copyBtn.style.background = ''; 
+                    copyBtn.style.background = '';
                 }, 2000);
             });
         }
 
-        // Jalankan pertama kali web dibuka
         loadMenu();
     </script>
 </body>
