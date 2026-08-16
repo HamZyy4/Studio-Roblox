@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin Panel - Script Studio</title>
     
     <!-- Google Fonts -->
@@ -21,6 +21,7 @@
             --text-secondary: #8b949e;
             --accent: #a855f7; 
             --accent-glow: rgba(168, 85, 247, 0.3);
+            --accent-warn: #f59e0b;
             --danger: #ef4444;
             --success: #10b981;
         }
@@ -30,32 +31,40 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-base);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 2rem;
+            padding: 2rem 1.5rem;
             background-image: 
                 radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.08), transparent 50%);
+            background-attachment: fixed;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             background: linear-gradient(to right, #fff, var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .header p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; }
+        .header p { 
+            color: var(--text-secondary); 
+            font-size: 0.95rem; 
+            margin-top: 5px; 
+            letter-spacing: 0.5px;
+        }
 
+        /* Container - Grid untuk Desktop, Flex Column untuk Mobile */
         .container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -64,34 +73,45 @@
             margin: 0 auto;
         }
 
-        /* Card / Panels */
+        /* Panels */
         .panel {
             background: var(--bg-surface);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.8rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
         }
 
         .panel-title {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding-bottom: 10px;
+            gap: 10px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--glass-border);
         }
 
-        /* Form Styling */
+        .panel-title i { color: var(--accent); }
+
+        /* Form Controls */
         .form-group { margin-bottom: 1.2rem; }
         .form-group label {
-            display: block;
+            display: flex;
+            justify-content: space-between;
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
+        }
+
+        .helper-text {
+            font-size: 0.75rem;
+            color: var(--accent);
+            opacity: 0.8;
         }
 
         input, textarea, select {
@@ -99,22 +119,51 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
             outline: none;
-            transition: border 0.3s;
+            transition: all 0.3s;
         }
 
         input:focus, textarea:focus, select:focus {
             border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
+        /* Input Group untuk Auto Prefix 'data/' */
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group-prefix {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-right: none;
+            padding: 14px 16px;
+            border-radius: 10px 0 0 10px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            border-radius: 0 10px 10px 0;
+            border-left: 1px solid var(--glass-border);
+        }
+        
+        .input-group input:focus {
+            border-left-color: var(--accent);
+        }
+
+        /* Buttons */
         .btn {
-            padding: 12px 20px;
+            padding: 14px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -131,75 +180,6 @@
         }
         .btn-primary:hover { background: #9333ea; transform: translateY(-2px); }
 
-        /* List Items */
-        .list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 500px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-
-        .list-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
-            padding: 12px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .item-info h4 { font-size: 0.95rem; margin-bottom: 3px; }
-        .item-info p { font-size: 0.75rem; color: var(--text-secondary); }
-        .item-badge {
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.1);
-            margin-left: 8px;
-        }
-
-        .item-actions button {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            transition: color 0.2s;
-        }
-
-        .item-actions button:hover { color: var(--danger); }
-        .edit-btn:hover { color: var(--accent) !important; }
-
-        /* JSON Output */
-        .json-output {
-            grid-column: 1 / -1; /* Full width */
-        }
-        .json-output pre {
-            background: #000;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            color: #10b981;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .action-row {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
         .btn-outline {
             background: transparent;
             border: 1px solid var(--glass-border);
@@ -207,8 +187,128 @@
         }
         .btn-outline:hover { background: rgba(255,255,255,0.05); }
 
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
+        /* List Items */
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 20px;
+        }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+        .list-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: background 0.3s;
+        }
+
+        .list-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .item-info { flex: 1; }
+        
+        .item-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .item-info h4 { font-size: 1rem; font-weight: 600; }
+        .item-info p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+        .item-path { 
+            font-size: 0.75rem; 
+            color: var(--accent); 
+            font-family: 'Fira Code', monospace; 
+            margin-top: 4px;
+            display: block;
+            word-break: break-all;
+        }
+        
+        .item-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 12px;
+        }
+
+        .item-actions button {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-actions button:hover { background: rgba(255,255,255,0.1); }
+        .edit-btn:hover { color: var(--accent-warn) !important; border-color: rgba(245, 158, 11, 0.3) !important; }
+        .del-btn:hover { color: var(--danger) !important; border-color: rgba(239, 68, 68, 0.3) !important; }
+
+        /* JSON Output */
+        .json-output {
+            grid-column: 1 / -1;
+        }
+        .json-output pre {
+            background: #000;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #10b981;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* ================= MOBILE OPTIMIZATION ================= */
+        @media (max-width: 800px) {
+            body { padding: 1.5rem 1rem; }
+            .header { margin-bottom: 1.5rem; }
+            .header h1 { font-size: 1.8rem; }
+            
+            .container { 
+                grid-template-columns: 1fr; /* Memaksa 1 Kolom (Vertikal) */
+                gap: 1.5rem;
+            }
+            
+            .panel { padding: 1.25rem; }
+            
+            .action-row { flex-direction: column; }
+            .btn { width: 100%; }
+
+            .list-item { flex-direction: column; gap: 12px; }
+            .item-actions { margin-left: 0; width: 100%; display: flex; justify-content: flex-end; }
+            .item-actions button { flex: 1; max-width: 60px; }
         }
     </style>
 </head>
@@ -216,84 +316,91 @@
 
     <div class="header">
         <h1>Admin Panel</h1>
-        <p>FORKT Community - config.json Generator</p>
+        <p>Config Generator & Manager</p>
     </div>
 
     <div class="container">
-        <!-- Form Panel -->
+        <!-- Panel Kiri: Form Input -->
         <div class="panel">
-            <h2 class="panel-title"><i class="ph-bold ph-plus-circle"></i> Tambah / Edit Data</h2>
+            <h2 class="panel-title"><i class="ph-bold ph-pencil-line"></i> Entry Data Baru</h2>
             
             <form id="dataForm">
                 <input type="hidden" id="editIndex" value="-1">
                 
                 <div class="form-group">
-                    <label>Tipe Item</label>
+                    <label>Tipe Eksekusi</label>
                     <select id="inputType" onchange="toggleFields()">
-                        <option value="script">Script (.lua file)</option>
-                        <option value="loadstring">Loadstring (Code Eksekusi)</option>
+                        <option value="script">Local File (.lua)</option>
+                        <option value="loadstring">Remote Code (Loadstring)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Judul / Nama Item</label>
+                    <label>Nama / Judul Item</label>
                     <input type="text" id="inputTitle" placeholder="Contoh: AirControl Movement" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Deskripsi Pendek</label>
-                    <input type="text" id="inputDesc" placeholder="Contoh: Script agar lompatan responsif">
+                    <label>Deskripsi (Opsional)</label>
+                    <input type="text" id="inputDesc" placeholder="Penjelasan singkat script ini">
                 </div>
 
-                <!-- Field untuk Script (File Path) -->
+                <!-- Field untuk Script (.lua File) dengan Auto Prefix -->
                 <div class="form-group" id="fieldFile">
-                    <label>Path File .lua (Dalam folder)</label>
-                    <input type="text" id="inputFile" placeholder="Contoh: data/AirControl.lua">
+                    <label>
+                        <span>Nama File .lua</span>
+                        <span class="helper-text">Otomatis tambah folder data/</span>
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prefix">data/</div>
+                        <input type="text" id="inputFile" placeholder="Contoh: AirControl.lua">
+                    </div>
                 </div>
 
-                <!-- Field untuk Loadstring (Code URL) -->
+                <!-- Field untuk Loadstring (URL) -->
                 <div class="form-group" id="fieldCode" style="display: none;">
-                    <label>Kode Loadstring</label>
-                    <textarea id="inputCode" rows="3" placeholder="Contoh: loadstring(game:HttpGet('URL'))()"></textarea>
+                    <label>Kode Loadstring Lengkap</label>
+                    <textarea id="inputCode" rows="4" placeholder="loadstring(game:HttpGet('...'))()"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary" id="submitBtn">
-                    <i class="ph-bold ph-floppy-disk"></i> Simpan ke List
+                    <i class="ph-bold ph-plus-circle"></i> Tambahkan ke List
                 </button>
-                <button type="button" class="btn btn-outline" style="margin-top: 10px; display: none;" id="cancelBtn" onclick="resetForm()">
-                    Batal Edit
+                <button type="button" class="btn btn-outline" style="margin-top: 12px; display: none;" id="cancelBtn" onclick="resetForm()">
+                    Batalkan Perubahan
                 </button>
             </form>
         </div>
 
-        <!-- List Panel -->
+        <!-- Panel Kanan: Current List -->
         <div class="panel">
-            <h2 class="panel-title"><i class="ph-bold ph-list-dashes"></i> Current List</h2>
+            <h2 class="panel-title"><i class="ph-bold ph-list-bullets"></i> Data Aktif Saat Ini</h2>
+            
             <div class="list-container" id="listContainer">
-                <!-- Data akan dimuat disini via JS -->
+                <p style="text-align:center; color:gray; font-size:0.9rem; padding: 20px;">Memuat data config terbaru...</p>
             </div>
             
-            <!-- Import existing JSON -->
-            <div style="margin-top: 20px; border-top: 1px solid var(--glass-border); padding-top: 15px;">
-                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">*Punya config.json lama? Paste disini lalu klik Import</p>
+            <!-- Import existing JSON secara manual jika Auto-fetch gagal -->
+            <div style="margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+                <label style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px; display:block;">Atau import manual kode JSON lama:</label>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" id="importInput" placeholder='Paste text isi config.json lama disini...' style="flex: 1; font-size: 0.8rem;">
-                    <button class="btn btn-outline" style="width: auto; padding: 0 15px;" onclick="importJSON()">Import</button>
+                    <input type="text" id="importInput" placeholder='Paste kode JSON [...]' style="padding: 10px; font-size: 0.85rem;">
+                    <button class="btn btn-outline" style="width: auto; padding: 0 16px;" onclick="importJSON()">Import</button>
                 </div>
             </div>
         </div>
 
-        <!-- JSON Output Panel -->
+        <!-- Panel Bawah (Full Width): JSON Output -->
         <div class="panel json-output">
-            <h2 class="panel-title"><i class="ph-bold ph-code"></i> Hasil config.json</h2>
+            <h2 class="panel-title"><i class="ph-bold ph-code"></i> Hasil File config.json</h2>
             <pre id="jsonPreview">[]</pre>
             
             <div class="action-row">
                 <button class="btn btn-primary" onclick="copyJSON()">
-                    <i class="ph-bold ph-copy"></i> Salin JSON
+                    <i class="ph-bold ph-copy"></i> Salin Kode JSON
                 </button>
                 <button class="btn btn-outline" onclick="downloadJSON()">
-                    <i class="ph-bold ph-download-simple"></i> Download config.json
+                    <i class="ph-bold ph-download-simple"></i> Download File
                 </button>
             </div>
         </div>
@@ -314,20 +421,25 @@
         const submitBtn = document.getElementById('submitBtn');
         const cancelBtn = document.getElementById('cancelBtn');
         
-        // Initial Fetch (Coba ambil config.json jika berada di folder yg sama)
+        // --- DETEKSI OTOMATIS CONFIG.JSON ---
+        // Saat halaman pertama kali dimuat, langsung cari config.json di root directory
         window.onload = async () => {
             try {
-                const response = await fetch('config.json');
+                // Tambahkan query parameter dummy (timestamp) untuk menghindari cache browser lama
+                const response = await fetch('config.json?t=' + new Date().getTime());
                 if(response.ok) {
                     configData = await response.json();
                     updateUI();
+                } else {
+                    updateUI(); // Tampilkan list kosong jika file tidak ditemukan
                 }
             } catch(e) {
-                console.log("Memulai dengan array kosong.");
+                console.log("Config belum ditemukan atau diakses via file://, memulai list kosong.");
+                updateUI();
             }
         };
 
-        // Ganti form input berdasarkan pilihan dropdown
+        // Ganti UI input berdasarkan pilihan dropdown Tipe
         function toggleFields() {
             if (inputType.value === 'script') {
                 document.getElementById('fieldFile').style.display = 'block';
@@ -338,7 +450,7 @@
             }
         }
 
-        // Handle Submit (Tambah / Edit)
+        // Handle Form Submit (Tambah / Edit)
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -348,9 +460,18 @@
                 type: inputType.value
             };
 
-            // Masukkan data spesifik sesuai tipe
+            // Logika spesifik tipe data
             if(inputType.value === 'script') {
-                newItem.file = inputFile.value.trim();
+                let rawFile = inputFile.value.trim();
+                
+                // DETEKSI FOLDER OTOMATIS: 
+                // Hapus tulisan "data/" di depan jika user terlanjur mengetiknya
+                if(rawFile.startsWith('data/')) {
+                    rawFile = rawFile.substring(5);
+                }
+                
+                // Lalu simpan ke JSON dengan path lengkap (data/namafile.lua)
+                newItem.file = "data/" + rawFile;
             } else {
                 newItem.code = inputCode.value.trim();
             }
@@ -358,18 +479,21 @@
             const currentIndex = parseInt(editIndex.value);
             
             if(currentIndex === -1) {
-                // Mode Tambah
-                configData.push(newItem);
+                configData.push(newItem); // Tambah Baru
             } else {
-                // Mode Edit
-                configData[currentIndex] = newItem;
+                configData[currentIndex] = newItem; // Timpa yang lama (Edit)
             }
 
             updateUI();
             resetForm();
+            
+            // Scroll sedikit ke list agar user HP melihat ada perubahan
+            if(window.innerWidth <= 800) {
+                document.getElementById('listContainer').scrollIntoView({behavior: "smooth"});
+            }
         });
 
-        // Edit Item
+        // Mode Edit: Pindahkan data ke Form Kiri
         function editItem(index) {
             const item = configData[index];
             editIndex.value = index;
@@ -380,99 +504,125 @@
             toggleFields();
 
             if(inputType.value === 'script') {
-                inputFile.value = item.file || '';
+                // Hapus "data/" saat masuk ke form UI (karena ada tulisan prefix statis)
+                let showFile = item.file || '';
+                if(showFile.startsWith('data/')) {
+                    showFile = showFile.substring(5);
+                }
+                inputFile.value = showFile;
             } else {
                 inputCode.value = item.code || '';
             }
 
-            submitBtn.innerHTML = '<i class="ph-bold ph-check"></i> Update Data';
-            submitBtn.style.background = '#f59e0b'; // Ubah warna jadi kuning saat mode edit
+            submitBtn.innerHTML = '<i class="ph-bold ph-check"></i> Simpan Perubahan';
+            submitBtn.style.background = 'var(--accent-warn)';
+            submitBtn.style.boxShadow = '0 4px 15px rgba(245, 158, 11, 0.3)';
             cancelBtn.style.display = 'block';
+            
+            // Scroll ke atas (Form) untuk mobile
+            if(window.innerWidth <= 800) {
+                form.scrollIntoView({behavior: "smooth"});
+            }
         }
 
-        // Hapus Item
+        // Mode Delete
         function deleteItem(index) {
-            if(confirm("Yakin ingin menghapus item ini?")) {
+            if(confirm("Yakin ingin menghapus item ini dari daftar?")) {
                 configData.splice(index, 1);
                 updateUI();
                 resetForm();
             }
         }
 
-        // Reset Form ke keadaan awal
+        // Reset UI Form ke default (Mode Tambah Baru)
         function resetForm() {
             form.reset();
             editIndex.value = -1;
             toggleFields();
-            submitBtn.innerHTML = '<i class="ph-bold ph-floppy-disk"></i> Simpan ke List';
+            submitBtn.innerHTML = '<i class="ph-bold ph-plus-circle"></i> Tambahkan ke List';
             submitBtn.style.background = 'var(--accent)';
+            submitBtn.style.boxShadow = '0 4px 15px var(--accent-glow)';
             cancelBtn.style.display = 'none';
         }
 
-        // Update HTML List dan JSON Preview
+        // Render Ulang DOM List & Box JSON Code
         function updateUI() {
             const listContainer = document.getElementById('listContainer');
             listContainer.innerHTML = '';
 
             if(configData.length === 0) {
-                listContainer.innerHTML = '<p style="text-align:center; color:gray; font-size:0.85rem; padding: 20px;">List kosong. Tambahkan data di sebelah kiri.</p>';
+                listContainer.innerHTML = '<p style="text-align:center; color:var(--text-secondary); font-size:0.9rem; padding: 20px;">Daftar masih kosong.</p>';
             }
 
             configData.forEach((item, index) => {
-                const badge = item.type === 'loadstring' ? 
+                const isLoadstring = item.type === 'loadstring';
+                
+                const badge = isLoadstring ? 
                     '<span class="item-badge" style="color: #6ee7b7; background: rgba(16,185,129,0.1)">Loadstring</span>' : 
                     '<span class="item-badge" style="color: #c4b5fd; background: rgba(139,92,246,0.1)">Script</span>';
+                
+                // Subtext bawah judul (Menampilkan URL atau Path file)
+                const subtext = isLoadstring ? 
+                    `<span class="item-path"><i class="ph ph-link"></i> ${item.code.substring(0, 30)}...</span>` : 
+                    `<span class="item-path"><i class="ph ph-folder"></i> ${item.file}</span>`;
 
                 listContainer.innerHTML += `
                     <div class="list-item">
                         <div class="item-info">
-                            <h4>${item.title} ${badge}</h4>
+                            <div class="item-header">
+                                <h4>${item.title}</h4>
+                                ${badge}
+                            </div>
                             <p>${item.description || 'Tidak ada deskripsi'}</p>
+                            ${subtext}
                         </div>
                         <div class="item-actions">
-                            <button class="edit-btn" onclick="editItem(${index})"><i class="ph-bold ph-pencil-simple"></i></button>
-                            <button onclick="deleteItem(${index})"><i class="ph-bold ph-trash"></i></button>
+                            <button class="edit-btn" onclick="editItem(${index})" title="Edit"><i class="ph-bold ph-pencil-simple"></i></button>
+                            <button class="del-btn" onclick="deleteItem(${index})" title="Hapus"><i class="ph-bold ph-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
 
-            // Tampilkan struktur JSON di bagian bawah
+            // Re-render Preview JSON String
             document.getElementById('jsonPreview').textContent = JSON.stringify(configData, null, 2);
         }
 
-        // Fitur Import
+        // Import Manual via Textbox
         function importJSON() {
-            const rawData = document.getElementById('importInput').value;
+            const rawData = document.getElementById('importInput').value.trim();
+            if(!rawData) return;
+            
             try {
                 const parsed = JSON.parse(rawData);
                 if(Array.isArray(parsed)) {
                     configData = parsed;
                     updateUI();
-                    alert("Berhasil import config.json!");
+                    alert("Berhasil mengimpor data JSON!");
                     document.getElementById('importInput').value = '';
                 } else {
-                    alert("Format JSON salah. Pastikan menggunakan format Array [ ... ].");
+                    alert("Format salah. Pastikan JSON diawali [ dan diakhiri ] (Format Array).");
                 }
             } catch (error) {
-                alert("Gagal membaca JSON. Pastikan text yang disalin valid!");
+                alert("Gagal membaca JSON. Ada kesalahan karakter/tanda baca pada teks Anda.");
             }
         }
 
-        // Copy / Download JSON
+        // Copy Text JSON
         function copyJSON() {
             const jsonText = document.getElementById('jsonPreview').textContent;
             navigator.clipboard.writeText(jsonText).then(() => {
-                alert("JSON berhasil disalin! Anda bisa mem-paste nya di file config.json");
+                alert("Kode JSON berhasil disalin! Buka file config.json Anda dan timpa isinya dengan kode ini.");
             });
         }
 
+        // Download File config.json
         function downloadJSON() {
             const jsonText = document.getElementById('jsonPreview').textContent;
             const blob = new Blob([jsonText], { type: "application/json" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "config.json";
+            link.download = "config.json"; // Nama file yang akan di download
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
