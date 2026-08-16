@@ -6,6 +6,12 @@
     "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/HamZyy4/Studio-Roblox/refs/heads/main/data/ImportRbxm.lua'))()"
   },
   {
+    "title": "Toolbox SL ( Delta )",
+    "description": "Loadstring untuk Script Toolbox",
+    "type": "loadstring",
+    "code": "loadstring(game:HttpGet("https://pastebin.com/raw/QX6ZE2pt"))()"
+  },
+  {
     "title": "Animated Decal Part ( Script In Part )",
     "description": "Animasi Decak Fade In & Out.",
     "file": "data/DecalAnim.lua"
