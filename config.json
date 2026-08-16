@@ -33,12 +33,6 @@
     "title": "Object Mover SL ( Delta )",
     "description": "Memindahkan Model,Part,Mesh,Dll Ke Depan Camera",
     "type": "loadstring",
-    "code": ""
-  },
-  {
-    "title": "Object Mover SL ( Delta )",
-    "description": "Memindahkan Model,Part,Mesh,Dll Ke Depan Camera",
-    "type": "loadstring",
     "code": "loadstring(game:HttpGet('https://pastebin.com/rbmJ8WXj'))()"
   },
   {
