@@ -2,26 +2,41 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Script Studio - FORKT Community</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         :root {
-            --bg-base: #09090b;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            /* Premium Dark Theme */
+            --bg-base: #050505;
+            --bg-surface: #0a0a0c;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-hover: rgba(255, 255, 255, 0.05);
+            
+            /* Text Colors */
             --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #a855f7; /* Ungu Premium */
-            --accent-glow: rgba(168, 85, 247, 0.3);
-            --hover-bg: rgba(255, 255, 255, 0.06);
+            --text-secondary: #8b949e;
+            --text-muted: #4b5563;
+            
+            /* Accents */
+            --accent-purple: #8b5cf6;
+            --accent-purple-glow: rgba(139, 92, 246, 0.25);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.15);
             --wa-color: #25D366;
+            
+            /* Layout */
+            --sidebar-width: 360px;
+            --border-radius-lg: 16px;
+            --border-radius-md: 12px;
+            --border-radius-sm: 8px;
         }
 
         * {
@@ -32,70 +47,113 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-base);
             color: var(--text-primary);
             display: flex;
             height: 100vh;
             overflow: hidden;
             user-select: none; 
+            /* Premium Ambient Background */
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.12), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.08), transparent 25%);
+                radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.08), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05), transparent 40%);
         }
 
-        .code-box {
-            user-select: text; 
-        }
+        .code-box { user-select: text; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* Custom Scrollbar (Slim & Elegant) */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-        /* Sidebar Glassmorphism */
+        /* ================= SIDEBAR ================= */
         .sidebar {
-            width: 340px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            width: var(--sidebar-width);
+            background: var(--bg-surface);
             border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
             z-index: 10;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
 
+        /* Brand Area */
         .brand {
             padding: 24px;
             display: flex;
             align-items: center;
             gap: 14px;
             border-bottom: 1px solid var(--glass-border);
+            position: relative;
         }
 
         .brand img {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-md);
             object-fit: cover;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .brand h2 {
-            font-size: 1.35rem;
+        .brand-text h2 {
+            font-size: 1.25rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            background: linear-gradient(135deg, #a855f7, #6366f1, #3b82f6);
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* Filter Pill Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 16px 24px 8px 24px;
+        }
+
+        .pill {
+            flex: 1;
+            padding: 8px 0;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pill:hover {
+            color: var(--text-primary);
+            background: var(--glass-hover);
+        }
+
+        .pill.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* List Items */
         #menu-list {
             list-style: none;
             overflow-y: auto;
             flex: 1;
-            padding: 16px;
+            padding: 8px 16px 24px 16px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -103,98 +161,130 @@
 
         #menu-list li {
             padding: 14px 16px;
-            border-radius: 12px;
+            border-radius: var(--border-radius-md);
             cursor: pointer;
             background: transparent;
             border: 1px solid transparent;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Smooth Hide/Show Animation for filtering */
+        #menu-list li.hidden {
+            display: none;
         }
 
         .item-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            gap: 12px;
         }
 
         #menu-list li .item-title {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.95rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            color: var(--text-primary);
+            line-height: 1.3;
         }
 
-        /* Badge tipe di list sidebar */
+        .item-icon {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        /* Badges */
         .item-badge {
             font-size: 0.65rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 20px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
 
         .badge-script {
-            background: rgba(168, 85, 247, 0.15);
-            color: #d8b4fe;
-            border: 1px solid rgba(168, 85, 247, 0.3);
+            background: rgba(139, 92, 246, 0.1);
+            color: #c4b5fd;
+            border: 1px solid rgba(139, 92, 246, 0.2);
         }
 
         .badge-loadstring {
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.1);
             color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
         #menu-list li .item-desc {
             font-size: 0.8rem;
             color: var(--text-secondary);
+            line-height: 1.4;
         }
 
         #menu-list li:hover {
-            background: var(--hover-bg);
-            transform: translateX(4px);
+            background: var(--glass-hover);
         }
 
         #menu-list li.active {
-            background: rgba(168, 85, 247, 0.12);
-            border: 1px solid rgba(168, 85, 247, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
-        #menu-list li.active .item-title {
-            color: var(--accent);
+        #menu-list li.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 10%; height: 80%; width: 3px;
+            background: var(--text-primary);
+            border-radius: 0 4px 4px 0;
         }
 
-        /* Content Area */
+        #menu-list li.active .item-icon {
+            color: var(--text-primary);
+        }
+
+        /* ================= CONTENT AREA ================= */
         .content {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.02), transparent 50%);
         }
 
         .header {
-            padding: 18px 32px;
-            background: transparent;
+            padding: 20px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--glass-border);
+            background: rgba(10, 10, 12, 0.7);
+            backdrop-filter: blur(20px);
+            z-index: 5;
         }
 
         .header-title {
-            font-size: 1.1rem;
-            font-weight: 500;
+            font-size: 1.15rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            color: var(--text-primary);
         }
 
         .header-title i {
-            color: var(--text-secondary);
+            color: var(--accent-purple);
+            background: var(--accent-purple-glow);
+            padding: 8px;
+            border-radius: 8px;
         }
 
         .header-actions {
@@ -215,8 +305,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             background: rgba(37, 211, 102, 0.1);
             color: var(--wa-color);
@@ -230,70 +320,71 @@
             background: var(--wa-color);
             color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
         button.copy-btn {
-            background: var(--accent);
-            color: #fff;
+            background: #fff;
+            color: #000;
             border: none;
-            padding: 0 16px;
-            height: 38px;
+            padding: 0 18px;
+            height: 40px;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
-            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             display: none; 
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px var(--accent-glow);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
         }
 
         button.copy-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px var(--accent-glow);
-            background: #9333ea;
+            background: #e2e8f0;
         }
 
+        /* Editor Area */
         .raw-container {
             flex: 1;
             padding: 32px;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
+            overflow: hidden; /* Code box scroll internally */
         }
 
-        /* Terminal/Code Block Box */
         .code-box {
-            background: #0f111a;
+            background: #0d0d11; /* Very dark blue/grey */
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: var(--border-radius-lg);
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             opacity: 0; 
-            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
         .code-header {
-            background: #151822;
-            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 14px 20px;
             display: flex;
             gap: 8px;
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .mac-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            opacity: 0.8;
         }
-        .dot-red { background: #ef4444; }
-        .dot-yellow { background: #f59e0b; }
-        .dot-green { background: #10b981; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
 
         pre {
             padding: 24px;
@@ -305,49 +396,71 @@
         code {
             font-family: 'Fira Code', monospace;
             font-size: 0.95rem;
-            line-height: 1.6;
-            color: #e2e8f0;
+            line-height: 1.7;
+            color: #d1d5db;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
 
+        /* Animations */
         @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { opacity: 0; transform: translateY(15px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
+        /* ================= RESPONSIVE (MOBILE) ================= */
+        @media (max-width: 800px) {
             body { flex-direction: column; }
             .sidebar {
                 width: 100%;
-                height: 38%;
+                height: 45vh; /* 45% dari layar untuk list di HP */
                 border-right: none;
                 border-bottom: 1px solid var(--glass-border);
+                box-shadow: none;
             }
-            .content { height: 62%; }
+            .content { height: 55vh; }
+            .brand { padding: 16px; }
+            .filter-tabs { padding: 12px 16px 4px 16px; }
             .raw-container { padding: 16px; }
             .header { padding: 16px; flex-wrap: wrap; gap: 12px; }
             .credits { display: none; }
+            
+            /* Sembunyikan mac dots di HP agar header code box lebih lega */
+            .code-header { display: none; }
         }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
+        <!-- Brand Info -->
         <div class="brand">
             <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-            <h2>Script Studio</h2>
+            <div class="brand-text">
+                <h2>Script Studio</h2>
+                <p>Forkt Community</p>
+            </div>
         </div>
+
+        <!-- Pill Tabs Filter -->
+        <div class="filter-tabs">
+            <div class="pill active" onclick="filterList('all', this)">All</div>
+            <div class="pill" onclick="filterList('script', this)">Script</div>
+            <div class="pill" onclick="filterList('loadstring', this)">Loadstring</div>
+        </div>
+
+        <!-- Menu List -->
         <ul id="menu-list">
-            <li style="text-align: center; color: var(--text-secondary); pointer-events: none;">Memuat list...</li>
+            <li style="text-align: center; color: var(--text-muted); pointer-events: none; background: transparent; border: none;">Memuat list...</li>
         </ul>
     </div>
 
     <div class="content">
+        <!-- Content Header -->
         <div class="header">
             <div class="header-title" id="content-title">
-                <i class="ph ph-file-text"></i> <span>Pilih item dari sidebar</span>
+                <i class="ph-bold ph-terminal-window"></i> 
+                <span>Pilih item di sidebar</span>
             </div>
             
             <div class="header-actions">
@@ -358,11 +471,12 @@
                 </a>
                 
                 <button id="copy-btn" class="copy-btn" onclick="copyText()">
-                    <i class="ph-bold ph-copy"></i> Salin
+                    <i class="ph-bold ph-copy"></i> Copy
                 </button>
             </div>
         </div>
 
+        <!-- Editor Box -->
         <div class="raw-container">
             <div class="code-box">
                 <div class="code-header">
@@ -370,7 +484,7 @@
                     <div class="mac-dot dot-yellow"></div>
                     <div class="mac-dot dot-green"></div>
                 </div>
-                <pre><code id="raw-content">-- Pilih item di sebelah kiri untuk melihat isi kodenya...</code></pre>
+                <pre><code id="raw-content">-- // Menunggu pilihan...</code></pre>
             </div>
         </div>
     </div>
@@ -378,68 +492,125 @@
     <script>
         const menuList = document.getElementById('menu-list');
         const contentTitle = document.querySelector('#content-title span');
+        const contentIcon = document.querySelector('#content-title i');
         const rawContent = document.getElementById('raw-content');
         const copyBtn = document.getElementById('copy-btn');
         const codeBox = document.querySelector('.code-box');
 
+        // Menyimpan data mentah dari JSON untuk filter
+        let scriptDataArray = [];
+
         async function loadMenu() {
             try {
+                // Fetch config.json
                 const response = await fetch('config.json');
                 if (!response.ok) throw new Error('Gagal memuat konfigurasi');
                 
-                const data = await response.json();
-                menuList.innerHTML = '';
-                
-                data.forEach((item, index) => {
-                    const li = document.createElement('li');
-                    
-                    const isLoadstring = item.type === 'loadstring';
-                    const iconClass = isLoadstring ? 'ph-bold ph-terminal-window' : 'ph-bold ph-file-code';
-                    const badgeText = isLoadstring ? 'Loadstring' : 'Script';
-                    const badgeClass = isLoadstring ? 'badge-loadstring' : 'badge-script';
-                    
-                    li.innerHTML = `
-                        <div class="item-top">
-                            <div class="item-title"><i class="${iconClass}"></i> ${item.title}</div>
-                            <span class="item-badge ${badgeClass}">${badgeText}</span>
-                        </div>
-                        ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
-                    `;
-                    
-                    li.onclick = () => selectMenuItem(item, li);
-                    menuList.appendChild(li);
+                scriptDataArray = await response.json();
+                renderList(scriptDataArray);
 
-                    // Otomatis pilih item pertama saat halaman dimuat
-                    if (index === 0) {
-                        selectMenuItem(item, li);
-                    }
-                });
+                // Otomatis pilih item pertama saat halaman pertama kali dibuka
+                if (scriptDataArray.length > 0) {
+                    const firstItemElement = menuList.firstElementChild;
+                    selectMenuItem(scriptDataArray[0], firstItemElement);
+                }
+
             } catch (error) {
-                menuList.innerHTML = `<li style="color: #ef4444; text-align:center;">Gagal memuat config.json</li>`;
+                menuList.innerHTML = `<li style="color: #ef4444; text-align:center; background: transparent; border: none;">Gagal memuat config.json</li>`;
             }
         }
 
-        async function selectMenuItem(item, element) {
-            document.querySelectorAll('#menu-list li').forEach(el => el.classList.remove('active'));
+        // Render List DOM berdasarkan data
+        function renderList(dataArray) {
+            menuList.innerHTML = '';
+            
+            if(dataArray.length === 0) {
+                menuList.innerHTML = `<li style="text-align: center; color: var(--text-muted); background: transparent; border: none;">Tidak ada data ditemukan</li>`;
+                return;
+            }
+
+            dataArray.forEach((item) => {
+                const li = document.createElement('li');
+                
+                // Set custom data attribute untuk filter logic
+                li.setAttribute('data-type', item.type || 'script');
+
+                const isLoadstring = item.type === 'loadstring';
+                const iconClass = isLoadstring ? 'ph-bold ph-terminal-window' : 'ph-bold ph-file-code';
+                const badgeText = isLoadstring ? 'Loadstring' : 'Script';
+                const badgeClass = isLoadstring ? 'badge-loadstring' : 'badge-script';
+                
+                li.innerHTML = `
+                    <div class="item-top">
+                        <div class="item-title">
+                            <i class="${iconClass} item-icon"></i> 
+                            ${item.title}
+                        </div>
+                        <span class="item-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
+                `;
+                
+                li.onclick = () => selectMenuItem(item, li);
+                menuList.appendChild(li);
+            });
+        }
+
+        // Logic Filter Pill Tab
+        function filterList(filterType, element) {
+            // Update Active State di Pills
+            document.querySelectorAll('.pill').forEach(pill => pill.classList.remove('active'));
             element.classList.add('active');
 
-            contentTitle.textContent = "Memuat data...";
+            // Hide/Show logic via CSS class
+            const listItems = menuList.querySelectorAll('li');
+            listItems.forEach(li => {
+                if (filterType === 'all') {
+                    li.classList.remove('hidden');
+                } else {
+                    if (li.getAttribute('data-type') === filterType) {
+                        li.classList.remove('hidden');
+                    } else {
+                        li.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        async function selectMenuItem(item, element) {
+            // Hapus class active dari semua li
+            document.querySelectorAll('#menu-list li').forEach(el => el.classList.remove('active'));
+            // Tambahkan ke element yang di klik
+            if(element) element.classList.add('active');
+
+            // Set Loading State
+            contentTitle.textContent = "Loading data...";
             rawContent.textContent = "Loading...";
             copyBtn.style.display = 'none';
             
+            // Ubah icon di header sesuai tipe
+            if (item.type === 'loadstring') {
+                contentIcon.className = 'ph-bold ph-terminal-window';
+            } else {
+                contentIcon.className = 'ph-bold ph-file-code';
+            }
+            
+            // Re-trigger animasi popup
             codeBox.style.animation = 'none';
             codeBox.offsetHeight; 
-            codeBox.style.animation = 'slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+            codeBox.style.animation = 'slideUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
 
+            // Logika Loadstring vs Script (File fetch)
             if (item.type === 'loadstring') {
-                // Jika tipenya loadstring, langsung tampilkan string kodenya
                 contentTitle.textContent = item.title;
                 rawContent.textContent = item.code || '-- Loadstring belum diisi di config.json';
                 copyBtn.style.display = 'flex';
             } else {
-                // Jika tipenya script, fetch file .lua nya
                 try {
-                    const response = await fetch(item.file);
+                    // Gunakan fallback path jika file property tidak ada
+                    const filePath = item.file || 'data/' + item.title.replace(/\s/g, '') + '.lua';
+                    const response = await fetch(filePath);
+                    
                     if (!response.ok) throw new Error('File tidak ditemukan');
                     
                     const textData = await response.text();
@@ -448,7 +619,7 @@
                     copyBtn.style.display = 'flex'; 
                 } catch (error) {
                     contentTitle.textContent = item.title;
-                    rawContent.textContent = "-- Error: Gagal memuat file script. Pastikan path file benar di config.json.";
+                    rawContent.textContent = "-- Error: Gagal memuat file script.\n-- Pastikan path file benar di config.json.";
                     copyBtn.style.display = 'flex';
                 }
             }
@@ -458,16 +629,19 @@
             const textToCopy = rawContent.textContent;
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalHTML = copyBtn.innerHTML;
-                copyBtn.innerHTML = `<i class="ph-bold ph-check"></i> Tersalin!`;
-                copyBtn.style.background = '#10b981';
+                copyBtn.innerHTML = `<i class="ph-bold ph-check"></i> Copied!`;
+                copyBtn.style.background = '#10b981'; // Hijau Emerald
+                copyBtn.style.color = '#ffffff';
                 
                 setTimeout(() => {
                     copyBtn.innerHTML = originalHTML;
-                    copyBtn.style.background = '';
+                    copyBtn.style.background = '#fff';
+                    copyBtn.style.color = '#000';
                 }, 2000);
             });
         }
 
+        // Initialize script
         loadMenu();
     </script>
 </body>
