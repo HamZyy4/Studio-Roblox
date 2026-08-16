@@ -28,5 +28,23 @@
     "description": "Preloading Part, Mesh, Audio, Anim For Optimize Map",
     "type": "script",
     "file": "data/PreloadAssets.lua"
+  },
+  {
+    "title": "Object Mover SL ( Delta )",
+    "description": "Memindahkan Model,Part,Mesh,Dll Ke Depan Camera",
+    "type": "loadstring",
+    "code": ""
+  },
+  {
+    "title": "Object Mover SL ( Delta )",
+    "description": "Memindahkan Model,Part,Mesh,Dll Ke Depan Camera",
+    "type": "loadstring",
+    "code": "loadstring(game:HttpGet('https://pastebin.com/rbmJ8WXj'))()"
+  },
+  {
+    "title": "Model Replacer ( Delta ) | Bug Rotate",
+    "description": "Mengubah Model Obstacle Secara Banyak",
+    "type": "loadstring",
+    "code": "loadstring(game:HttpGet('https://pastebin.com/9krzbkAu'))()"
   }
 ]
