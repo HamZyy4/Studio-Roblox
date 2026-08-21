@@ -1,36 +1,36 @@
 [
   {
-    "title": "Importer RBXM ( Delta )",
+    "title": "Importer RBXM",
     "description": "Loadstring untuk importer asset RBXM",
     "type": "loadstring",
     "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/HamZyy4/Studio-Roblox/refs/heads/main/data/ImportRbxm.lua'))()"
   },
   {
-    "title": "Toolbox SL ( Delta )",
+    "title": "Toolbox SL",
     "description": "Loadstring untuk Script Toolbox",
     "type": "loadstring",
     "code": "loadstring(game:HttpGet('https://pastebin.com/raw/QX6ZE2pt'))()"
   },
   {
-    "title": "Animated Decal Part ( Script In Part )",
+    "title": "Animated Decal Part",
     "description": "Animasi Decal Fade In & Out.",
     "type": "script",
     "file": "data/DecalAnim.lua"
   },
   {
-    "title": "AirControl Movement ( SPS )",
+    "title": "AirControl Movement",
     "description": "Script AirControl Agar Movement/Jump Responsif",
     "type": "script",
     "file": "data/AirControl.lua"
   },
   {
-    "title": "Fix Lag/Preload Assets ( SSS )",
+    "title": "Preload Assets",
     "description": "Preloading Part, Mesh, Audio, Anim For Optimize Map",
     "type": "script",
     "file": "data/PreloadAssets.lua"
   },
   {
-    "title": "Object Mover SL ( Delta )",
+    "title": "Object Mover SL",
     "description": "Memindahkan Model,Part,Mesh,Dll Ke Depan Camera",
     "type": "loadstring",
     "code": "loadstring(game:HttpGet('https://pastebin.com/rbmJ8WXj'))()"
@@ -40,5 +40,23 @@
     "description": "Mengubah Model Obstacle Secara Banyak",
     "type": "loadstring",
     "code": "loadstring(game:HttpGet('https://pastebin.com/9krzbkAu'))()"
+  },
+  {
+    "title": "SmoothRotate Jump",
+    "description": "membuat karakter berputar secara halus mengikuti arah gerakan, tanpa konflik dengan rotasi bawaan Roblox",
+    "type": "script",
+    "file": "data/SmoothRotate.lua"
+  },
+  {
+    "title": "CharOptmizer",
+    "description": "mengoptimalkan efek kosmetik pemain lain berdasarkan jarak ( Reduce Lag )",
+    "type": "script",
+    "file": "data/CharOptmizer.lua"
+  },
+  {
+    "title": "PhysicsStabilizer",
+    "description": "menjaga karakter tetap stabil setelah respawn dengan mendeteksi velocity atau kondisi fisika yang abnormal",
+    "type": "script",
+    "file": "data/PhysicsStabilizer.lua"
   }
 ]
