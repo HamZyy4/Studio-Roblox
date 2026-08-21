@@ -2,13 +2,20 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover"
     >
 
+    <meta
+        name="theme-color"
+        content="#08080d"
+    >
+
     <title>Script Studio — FORKT Community</title>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -17,37 +24,61 @@
         rel="stylesheet"
     >
 
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Prism Syntax Highlight -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-lua.min.js"></script>
 
     <style>
         :root {
             color-scheme: dark;
 
-            --bg: #07070a;
-            --surface: #0c0c11;
-            --surface-2: #111119;
-            --surface-3: #171721;
+            --bg: #07070b;
+            --bg-secondary: #09090f;
 
-            --border: rgba(255,255,255,.075);
-            --border-hover: rgba(255,255,255,.14);
+            --surface: #0d0d14;
+            --surface-soft: #11111a;
+            --surface-hover: #161621;
+            --surface-active: #191925;
 
-            --text: #f7f7fa;
-            --text-soft: #a3a3b2;
-            --text-muted: #676778;
+            --border: rgba(255, 255, 255, .075);
+            --border-hover: rgba(255, 255, 255, .15);
 
-            --primary: #8b5cf6;
-            --primary-light: #c4b5fd;
-            --primary-glow: rgba(139,92,246,.22);
+            --text: #f8fafc;
+            --text-soft: #a8a8b7;
+            --text-muted: #686879;
+
+            --purple: #8b5cf6;
+            --purple-light: #c4b5fd;
+            --purple-dark: #6d28d9;
+            --purple-glow: rgba(139, 92, 246, .22);
 
             --green: #22c55e;
+            --green-light: #86efac;
+            --green-glow: rgba(34, 197, 94, .16);
+
+            --blue: #3b82f6;
+            --blue-light: #93c5fd;
+            --blue-glow: rgba(59, 130, 246, .16);
+
+            --orange: #f97316;
             --red: #ef4444;
 
-            --sidebar-width: 340px;
-            --radius-xl: 22px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
+            --sidebar-width: 350px;
 
-            --ease: cubic-bezier(.2,.8,.2,1);
+            --radius-xl: 22px;
+            --radius-lg: 17px;
+            --radius-md: 13px;
+            --radius-sm: 9px;
+
+            --ease: cubic-bezier(.2, .8, .2, 1);
         }
 
         * {
@@ -66,16 +97,25 @@
         body {
             min-height: 100dvh;
             overflow: hidden;
-            font-family: "Plus Jakarta Sans", sans-serif;
             color: var(--text);
+            font-family: "Plus Jakarta Sans", sans-serif;
             background:
-                radial-gradient(circle at 15% 0%, rgba(139,92,246,.13), transparent 34%),
-                radial-gradient(circle at 100% 100%, rgba(34,197,94,.07), transparent 30%),
+                radial-gradient(
+                    circle at 5% 0%,
+                    rgba(139, 92, 246, .14),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 100% 100%,
+                    rgba(59, 130, 246, .08),
+                    transparent 30%
+                ),
                 var(--bg);
         }
 
         button,
-        input {
+        input,
+        a {
             font: inherit;
         }
 
@@ -83,9 +123,13 @@
             color: inherit;
         }
 
+        a {
+            color: inherit;
+        }
+
         ::selection {
             color: white;
-            background: rgba(139,92,246,.55);
+            background: rgba(139, 92, 246, .55);
         }
 
         ::-webkit-scrollbar {
@@ -99,10 +143,17 @@
 
         ::-webkit-scrollbar-thumb {
             border-radius: 999px;
-            background: rgba(255,255,255,.12);
+            background: rgba(255, 255, 255, .12);
         }
 
-        /* APP LAYOUT */
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, .22);
+        }
+
+
+        /* =====================================================
+           APP LAYOUT
+        ===================================================== */
 
         .app {
             display: grid;
@@ -118,9 +169,10 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            background: rgba(10,10,15,.88);
             border-right: 1px solid var(--border);
-            backdrop-filter: blur(24px);
+            background: rgba(9, 9, 15, .88);
+            box-shadow: 20px 0 60px rgba(0, 0, 0, .18);
+            backdrop-filter: blur(28px);
         }
 
         .main {
@@ -130,10 +182,13 @@
             overflow: hidden;
         }
 
-        /* SIDEBAR HEADER */
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
 
         .sidebar-header {
-            padding: 22px 20px 18px;
+            padding: 22px 20px 17px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -145,30 +200,36 @@
 
         .brand-logo {
             position: relative;
-            width: 44px;
-            height: 44px;
-            flex: 0 0 44px;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
             display: grid;
             place-items: center;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .13);
+            border-radius: 15px;
             color: white;
             background:
-                linear-gradient(145deg, rgba(139,92,246,.95), rgba(91,33,182,.65));
-            box-shadow: 0 10px 30px rgba(139,92,246,.25);
-        }
-
-        .brand-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+                linear-gradient(
+                    145deg,
+                    rgba(139, 92, 246, .95),
+                    rgba(79, 70, 229, .65)
+                );
+            box-shadow:
+                0 12px 32px rgba(139, 92, 246, .22),
+                inset 0 1px rgba(255, 255, 255, .2);
         }
 
         .brand-logo i {
+            font-size: 23px;
+        }
+
+        .brand-logo img {
             position: absolute;
-            font-size: 22px;
-            z-index: -1;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .brand-copy {
@@ -178,17 +239,17 @@
 
         .brand-copy h1 {
             font-size: 16px;
-            line-height: 1.3;
             font-weight: 800;
-            letter-spacing: -.35px;
+            line-height: 1.35;
+            letter-spacing: -.4px;
         }
 
         .brand-copy p {
             margin-top: 3px;
             color: var(--text-muted);
             font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.6px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
             text-transform: uppercase;
         }
 
@@ -196,7 +257,8 @@
             display: none;
         }
 
-        /* SEARCH */
+
+        /* Search */
 
         .search-box {
             position: relative;
@@ -207,57 +269,65 @@
             position: absolute;
             top: 50%;
             left: 14px;
+            z-index: 1;
             color: var(--text-muted);
             font-size: 17px;
-            transform: translateY(-50%);
             pointer-events: none;
+            transform: translateY(-50%);
         }
 
         .search-box input {
             width: 100%;
-            height: 43px;
-            padding: 0 14px 0 41px;
-            color: var(--text);
+            height: 44px;
+            padding: 0 14px 0 42px;
             outline: none;
+            color: var(--text);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            background: rgba(255,255,255,.035);
-            transition: .2s ease;
+            background: rgba(255, 255, 255, .035);
+            transition: .22s ease;
         }
 
         .search-box input::placeholder {
             color: var(--text-muted);
         }
 
-        .search-box input:focus {
-            border-color: rgba(139,92,246,.55);
-            background: rgba(139,92,246,.06);
-            box-shadow: 0 0 0 4px rgba(139,92,246,.09);
+        .search-box input:hover {
+            border-color: rgba(255, 255, 255, .11);
         }
 
-        /* FILTER */
+        .search-box input:focus {
+            border-color: rgba(139, 92, 246, .58);
+            background: rgba(139, 92, 246, .06);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, .09);
+        }
+
+
+        /* Filter tabs */
 
         .filters {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 4px;
             margin-top: 12px;
             padding: 4px;
+            overflow-x: auto;
             border: 1px solid var(--border);
-            border-radius: 13px;
-            background: rgba(255,255,255,.025);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .025);
         }
 
         .filter-btn {
             min-width: 0;
-            padding: 8px 5px;
+            padding: 8px 4px;
             border: 0;
-            border-radius: 9px;
+            border-radius: 10px;
             color: var(--text-muted);
             background: transparent;
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
             transition: .2s ease;
         }
 
@@ -267,13 +337,16 @@
 
         .filter-btn.active {
             color: white;
-            background: var(--surface-3);
-            box-shadow: 0 3px 12px rgba(0,0,0,.3);
+            background: var(--surface-active);
+            box-shadow:
+                0 4px 14px rgba(0, 0, 0, .28),
+                inset 0 1px rgba(255, 255, 255, .05);
         }
 
-        /* SCRIPT LIST */
 
-        .list-label {
+        /* List */
+
+        .list-heading {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -286,14 +359,14 @@
         }
 
         .list-count {
+            min-width: 24px;
+            height: 23px;
             display: grid;
-            min-width: 22px;
-            height: 22px;
-            padding: 0 6px;
             place-items: center;
-            border-radius: 7px;
+            padding: 0 7px;
+            border-radius: 8px;
             color: var(--text-soft);
-            background: rgba(255,255,255,.05);
+            background: rgba(255, 255, 255, .055);
             letter-spacing: 0;
         }
 
@@ -314,40 +387,67 @@
             padding: 13px;
             overflow: hidden;
             border: 1px solid transparent;
-            border-radius: 14px;
+            border-radius: 15px;
             cursor: pointer;
-            transition: .25s var(--ease);
+            transition: .24s var(--ease);
         }
 
         .menu-item:hover {
-            background: rgba(255,255,255,.035);
-            border-color: rgba(255,255,255,.05);
+            border-color: rgba(255, 255, 255, .055);
+            background: rgba(255, 255, 255, .035);
+            transform: translateX(2px);
         }
 
         .menu-item.active {
+            border-color: rgba(139, 92, 246, .24);
             background:
-                linear-gradient(100deg, rgba(139,92,246,.13), rgba(139,92,246,.04));
-            border-color: rgba(139,92,246,.22);
-            box-shadow: inset 3px 0 var(--primary);
+                linear-gradient(
+                    100deg,
+                    rgba(139, 92, 246, .14),
+                    rgba(139, 92, 246, .035)
+                );
+            box-shadow:
+                inset 3px 0 var(--purple),
+                0 8px 30px rgba(0, 0, 0, .12);
         }
 
         .menu-icon {
-            width: 36px;
-            height: 36px;
-            flex: 0 0 36px;
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
             display: grid;
             place-items: center;
             border: 1px solid var(--border);
-            border-radius: 11px;
+            border-radius: 12px;
             color: var(--text-soft);
-            background: rgba(255,255,255,.035);
-            font-size: 17px;
+            background: rgba(255, 255, 255, .035);
+            font-size: 18px;
+            transition: .2s ease;
         }
 
         .menu-item.active .menu-icon {
-            color: var(--primary-light);
-            border-color: rgba(139,92,246,.25);
-            background: rgba(139,92,246,.13);
+            color: var(--purple-light);
+            border-color: rgba(139, 92, 246, .25);
+            background: rgba(139, 92, 246, .13);
+        }
+
+        .menu-item[data-type="rbxm"].active {
+            border-color: rgba(59, 130, 246, .24);
+            background:
+                linear-gradient(
+                    100deg,
+                    rgba(59, 130, 246, .14),
+                    rgba(59, 130, 246, .035)
+                );
+            box-shadow:
+                inset 3px 0 var(--blue),
+                0 8px 30px rgba(0, 0, 0, .12);
+        }
+
+        .menu-item[data-type="rbxm"].active .menu-icon {
+            color: var(--blue-light);
+            border-color: rgba(59, 130, 246, .25);
+            background: rgba(59, 130, 246, .13);
         }
 
         .menu-content {
@@ -364,17 +464,17 @@
 
         .menu-title {
             overflow: hidden;
-            color: #ededf2;
+            color: #ededf4;
             font-size: 13px;
             font-weight: 700;
-            line-height: 1.5;
+            line-height: 1.55;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
         .menu-description {
             display: -webkit-box;
-            margin-top: 5px;
+            margin-top: 4px;
             overflow: hidden;
             color: var(--text-muted);
             font-size: 11px;
@@ -390,24 +490,30 @@
             border-radius: 6px;
             font-size: 8px;
             font-weight: 800;
-            letter-spacing: .5px;
+            letter-spacing: .45px;
             text-transform: uppercase;
         }
 
         .badge-script {
-            color: #c4b5fd;
-            border-color: rgba(139,92,246,.22);
-            background: rgba(139,92,246,.09);
+            color: var(--purple-light);
+            border-color: rgba(139, 92, 246, .23);
+            background: rgba(139, 92, 246, .09);
         }
 
         .badge-loadstring {
-            color: #86efac;
-            border-color: rgba(34,197,94,.22);
-            background: rgba(34,197,94,.08);
+            color: var(--green-light);
+            border-color: rgba(34, 197, 94, .23);
+            background: rgba(34, 197, 94, .09);
+        }
+
+        .badge-rbxm {
+            color: var(--blue-light);
+            border-color: rgba(59, 130, 246, .24);
+            background: rgba(59, 130, 246, .09);
         }
 
         .empty-list {
-            padding: 35px 20px;
+            padding: 40px 20px;
             color: var(--text-muted);
             text-align: center;
             font-size: 12px;
@@ -416,18 +522,16 @@
 
         .empty-list i {
             display: block;
-            margin-bottom: 8px;
-            font-size: 26px;
+            margin-bottom: 10px;
+            font-size: 28px;
         }
-
-        /* SIDEBAR FOOTER */
 
         .sidebar-footer {
             padding: 14px 18px;
             border-top: 1px solid var(--border);
         }
 
-        .status {
+        .online-status {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -441,10 +545,13 @@
             height: 7px;
             border-radius: 50%;
             background: var(--green);
-            box-shadow: 0 0 12px rgba(34,197,94,.7);
+            box-shadow: 0 0 12px rgba(34, 197, 94, .75);
         }
 
-        /* TOPBAR */
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
 
         .topbar {
             min-height: 76px;
@@ -454,8 +561,8 @@
             gap: 20px;
             padding: 14px 24px;
             border-bottom: 1px solid var(--border);
-            background: rgba(8,8,12,.65);
-            backdrop-filter: blur(20px);
+            background: rgba(8, 8, 13, .66);
+            backdrop-filter: blur(22px);
         }
 
         .title-group {
@@ -465,22 +572,25 @@
             gap: 12px;
         }
 
-        .mobile-menu {
-            display: none;
-        }
-
         .title-icon {
-            width: 42px;
-            height: 42px;
-            flex: 0 0 42px;
+            width: 43px;
+            height: 43px;
+            flex: 0 0 43px;
             display: grid;
             place-items: center;
-            border: 1px solid rgba(139,92,246,.25);
-            border-radius: 13px;
-            color: var(--primary-light);
-            background: rgba(139,92,246,.11);
-            box-shadow: 0 8px 25px rgba(139,92,246,.1);
+            border: 1px solid rgba(139, 92, 246, .25);
+            border-radius: 14px;
+            color: var(--purple-light);
+            background: rgba(139, 92, 246, .11);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, .1);
             font-size: 20px;
+        }
+
+        .title-icon.rbxm {
+            color: var(--blue-light);
+            border-color: rgba(59, 130, 246, .25);
+            background: rgba(59, 130, 246, .11);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, .1);
         }
 
         .title-copy {
@@ -491,7 +601,7 @@
             overflow: hidden;
             font-size: 14px;
             font-weight: 750;
-            line-height: 1.4;
+            line-height: 1.45;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
@@ -500,8 +610,8 @@
             margin-top: 3px;
             color: var(--text-muted);
             font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .8px;
+            font-weight: 800;
+            letter-spacing: .85px;
             text-transform: uppercase;
         }
 
@@ -511,70 +621,106 @@
             gap: 9px;
         }
 
-        .icon-btn,
-        .copy-btn,
         .mobile-menu,
-        .mobile-close {
+        .mobile-close,
+        .icon-button {
+            width: 41px;
+            height: 41px;
+            display: grid;
+            place-items: center;
             border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-soft);
+            background: rgba(255, 255, 255, .035);
             cursor: pointer;
+            text-decoration: none;
+            font-size: 18px;
             transition: .2s var(--ease);
         }
 
-        .icon-btn,
-        .mobile-menu,
-        .mobile-close {
-            width: 40px;
-            height: 40px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            color: var(--text-soft);
-            background: rgba(255,255,255,.035);
-            font-size: 18px;
+        .mobile-menu {
+            display: none;
         }
 
-        .icon-btn:hover,
         .mobile-menu:hover,
-        .mobile-close:hover {
+        .mobile-close:hover,
+        .icon-button:hover {
             color: white;
             border-color: var(--border-hover);
-            background: rgba(255,255,255,.07);
+            background: rgba(255, 255, 255, .075);
         }
 
-        .whatsapp:hover {
+        .whatsapp-button:hover {
             color: #4ade80;
-            border-color: rgba(34,197,94,.3);
-            background: rgba(34,197,94,.1);
+            border-color: rgba(34, 197, 94, .3);
+            background: rgba(34, 197, 94, .1);
         }
 
-        .copy-btn {
-            height: 40px;
+
+        /* Improved copy button */
+
+        .copy-button {
+            height: 42px;
             display: none;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 0 16px;
-            border-color: rgba(255,255,255,.9);
-            border-radius: 12px;
-            color: #09090b;
-            background: #fff;
+            gap: 10px;
+            padding: 0 16px 0 10px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, .38);
+            border-radius: 13px;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139, 92, 246, .98),
+                    rgba(109, 40, 217, .98)
+                );
+            box-shadow:
+                0 10px 26px rgba(139, 92, 246, .24),
+                inset 0 1px rgba(255, 255, 255, .18);
+            cursor: pointer;
             font-size: 12px;
             font-weight: 800;
-            box-shadow: 0 7px 24px rgba(255,255,255,.1);
+            transition: .22s var(--ease);
         }
 
-        .copy-btn:hover {
-            background: #e7e7eb;
-            transform: translateY(-1px);
+        .copy-button-icon {
+            width: 27px;
+            height: 27px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .14);
+            font-size: 14px;
         }
 
-        .copy-btn.success {
-            color: white;
-            border-color: var(--green);
-            background: var(--green);
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 14px 34px rgba(139, 92, 246, .34),
+                inset 0 1px rgba(255, 255, 255, .2);
         }
 
-        /* WORKSPACE */
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        .copy-button.success {
+            border-color: rgba(34, 197, 94, .45);
+            background:
+                linear-gradient(
+                    135deg,
+                    #22c55e,
+                    #15803d
+                );
+            box-shadow: 0 10px 28px rgba(34, 197, 94, .25);
+        }
+
+
+        /* =====================================================
+           WORKSPACE
+        ===================================================== */
 
         .workspace {
             min-height: 0;
@@ -583,29 +729,64 @@
             overflow: hidden;
         }
 
-        .editor {
+        .panel {
             height: 100%;
-            display: flex;
-            flex-direction: column;
             overflow: hidden;
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
-            background: rgba(11,11,16,.9);
+            background: rgba(11, 11, 17, .9);
             box-shadow:
-                0 35px 80px rgba(0,0,0,.45),
-                inset 0 1px rgba(255,255,255,.025);
-            animation: editorIn .45s var(--ease);
+                0 35px 85px rgba(0, 0, 0, .43),
+                inset 0 1px rgba(255, 255, 255, .025);
+            animation: panel-enter .45s var(--ease);
         }
 
-        .editor-header {
-            min-height: 52px;
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes panel-enter {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.99);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+
+        /* =====================================================
+           SCRIPT EDITOR
+        ===================================================== */
+
+        .script-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-toolbar {
+            min-height: 55px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
-            padding: 0 17px;
+            gap: 15px;
+            padding: 0 18px;
             border-bottom: 1px solid var(--border);
-            background: rgba(255,255,255,.018);
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, .025),
+                    rgba(255, 255, 255, .01)
+                );
+        }
+
+        .window-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .window-controls {
@@ -619,23 +800,55 @@
             border-radius: 50%;
         }
 
-        .window-dot:nth-child(1) { background: #ff5f57; }
-        .window-dot:nth-child(2) { background: #febc2e; }
-        .window-dot:nth-child(3) { background: #28c840; }
+        .window-dot:nth-child(1) {
+            background: #ff5f57;
+        }
 
-        .file-meta {
+        .window-dot:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .window-dot:nth-child(3) {
+            background: #28c840;
+        }
+
+        .editor-file {
             display: flex;
             align-items: center;
             gap: 8px;
+            min-width: 0;
             color: var(--text-muted);
             font-family: "Fira Code", monospace;
             font-size: 10px;
             font-weight: 500;
         }
 
-        .file-meta i {
-            color: var(--primary-light);
+        .editor-file i {
+            flex-shrink: 0;
+            color: var(--purple-light);
             font-size: 14px;
+        }
+
+        .editor-file span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .language-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 9px;
+            border: 1px solid rgba(139, 92, 246, .18);
+            border-radius: 8px;
+            color: var(--purple-light);
+            background: rgba(139, 92, 246, .075);
+            font-family: "Fira Code", monospace;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .6px;
+            text-transform: uppercase;
         }
 
         .editor-body {
@@ -643,32 +856,298 @@
             min-height: 0;
             flex: 1;
             overflow: auto;
+            background:
+                linear-gradient(
+                    rgba(255, 255, 255, .012) 1px,
+                    transparent 1px
+                );
+            background-size: 100% 29px;
         }
 
-        pre {
+        .editor-body pre[class*="language-"] {
             min-width: max-content;
             min-height: 100%;
-            padding: 25px 27px 60px;
+            margin: 0;
+            padding: 26px 28px 70px;
+            overflow: visible;
+            border: 0;
+            border-radius: 0;
+            text-shadow: none;
+            background: transparent;
         }
 
-        code {
+        .editor-body code[class*="language-"] {
             display: block;
-            color: #c9cad3;
+            color: #d5d7e1;
             font-family: "Fira Code", monospace;
             font-size: 13px;
             line-height: 1.85;
-            white-space: pre;
             tab-size: 4;
+            text-shadow: none;
+            white-space: pre;
             user-select: text;
         }
 
-        .overlay {
+        /* Luau syntax colors */
+
+        .token.comment {
+            color: #687386;
+            font-style: italic;
+        }
+
+        .token.keyword {
+            color: #c084fc;
+        }
+
+        .token.string {
+            color: #86efac;
+        }
+
+        .token.number,
+        .token.boolean {
+            color: #fbbf24;
+        }
+
+        .token.function {
+            color: #60a5fa;
+        }
+
+        .token.operator {
+            color: #f472b6;
+        }
+
+        .token.punctuation {
+            color: #94a3b8;
+        }
+
+        .token.builtin {
+            color: #22d3ee;
+        }
+
+
+        /* =====================================================
+           RBXM PREVIEW
+        ===================================================== */
+
+        .rbxm-panel {
+            overflow-y: auto;
+            padding: clamp(18px, 4vw, 46px);
+        }
+
+        .rbxm-layout {
+            width: min(900px, 100%);
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: auto;
+        }
+
+        .rbxm-hero {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(22px, 5vw, 42px);
+            border: 1px solid rgba(59, 130, 246, .17);
+            border-radius: 24px;
+            background:
+                radial-gradient(
+                    circle at 100% 0%,
+                    rgba(59, 130, 246, .17),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    145deg,
+                    rgba(59, 130, 246, .065),
+                    rgba(255, 255, 255, .018)
+                );
+        }
+
+        .rbxm-hero::after {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -80px;
+            width: 260px;
+            height: 260px;
+            border: 1px solid rgba(59, 130, 246, .13);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 40px rgba(59, 130, 246, .025),
+                0 0 0 80px rgba(59, 130, 246, .018);
+            pointer-events: none;
+        }
+
+        .rbxm-heading {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .rbxm-large-icon {
+            width: 72px;
+            height: 72px;
+            flex: 0 0 72px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(59, 130, 246, .28);
+            border-radius: 21px;
+            color: var(--blue-light);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(59, 130, 246, .2),
+                    rgba(59, 130, 246, .07)
+                );
+            box-shadow:
+                0 18px 40px rgba(59, 130, 246, .16),
+                inset 0 1px rgba(255, 255, 255, .1);
+            font-size: 34px;
+        }
+
+        .rbxm-title-area {
+            min-width: 0;
+        }
+
+        .rbxm-title-area p {
+            margin-bottom: 6px;
+            color: var(--blue-light);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .rbxm-title-area h2 {
+            overflow-wrap: anywhere;
+            font-size: clamp(21px, 4vw, 32px);
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -.8px;
+        }
+
+        .rbxm-description {
+            position: relative;
+            z-index: 1;
+            max-width: 620px;
+            margin-top: 19px;
+            color: var(--text-soft);
+            font-size: 13px;
+            line-height: 1.75;
+        }
+
+        .rbxm-information {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .info-card {
+            min-width: 0;
+            padding: 17px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, .025);
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 9px;
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .info-label i {
+            color: var(--blue-light);
+            font-size: 14px;
+        }
+
+        .info-value {
+            overflow: hidden;
+            color: #e9eaf0;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.5;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rbxm-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-top: 22px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .rbxm-safe-note {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--text-muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .rbxm-safe-note i {
+            color: var(--green-light);
+            font-size: 18px;
+        }
+
+        .download-button {
+            min-height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-shrink: 0;
+            padding: 0 19px;
+            border: 1px solid rgba(59, 130, 246, .38);
+            border-radius: 13px;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #2563eb
+                );
+            box-shadow:
+                0 12px 30px rgba(59, 130, 246, .25),
+                inset 0 1px rgba(255, 255, 255, .18);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+            transition: .22s var(--ease);
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 16px 38px rgba(59, 130, 246, .34),
+                inset 0 1px rgba(255, 255, 255, .2);
+        }
+
+
+        /* =====================================================
+           TOAST & OVERLAY
+        ===================================================== */
+
+        .sidebar-overlay {
             position: fixed;
             inset: 0;
             z-index: 20;
             display: none;
-            background: rgba(0,0,0,.65);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, .68);
+            backdrop-filter: blur(5px);
         }
 
         .toast {
@@ -678,13 +1157,13 @@
             z-index: 100;
             display: flex;
             align-items: center;
-            gap: 9px;
-            padding: 12px 15px;
-            border: 1px solid rgba(34,197,94,.25);
-            border-radius: 12px;
+            gap: 10px;
+            padding: 13px 16px;
+            border: 1px solid rgba(34, 197, 94, .27);
+            border-radius: 13px;
             color: #bbf7d0;
-            background: rgba(13,31,22,.96);
-            box-shadow: 0 15px 45px rgba(0,0,0,.45);
+            background: rgba(12, 31, 21, .97);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
             font-size: 12px;
             font-weight: 700;
             opacity: 0;
@@ -698,30 +1177,33 @@
             transform: translateY(0);
         }
 
-        @keyframes editorIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px) scale(.99);
-            }
-            to {
-                opacity: 1;
-                transform: none;
-            }
-        }
 
-        /* TABLET */
+        /* =====================================================
+           RESPONSIVE TABLET
+        ===================================================== */
 
         @media (max-width: 1050px) {
             :root {
-                --sidebar-width: 310px;
+                --sidebar-width: 315px;
             }
 
             .workspace {
                 padding: 18px;
             }
+
+            .rbxm-information {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .info-card:last-child {
+                grid-column: 1 / -1;
+            }
         }
 
-        /* MOBILE */
+
+        /* =====================================================
+           RESPONSIVE MOBILE
+        ===================================================== */
 
         @media (max-width: 760px) {
             .app {
@@ -731,23 +1213,23 @@
             .sidebar {
                 position: fixed;
                 inset: 0 auto 0 0;
-                width: min(88vw, 340px);
+                width: min(89vw, 350px);
                 height: 100dvh;
                 border-right: 1px solid var(--border);
-                box-shadow: 25px 0 70px rgba(0,0,0,.65);
+                box-shadow: 28px 0 80px rgba(0, 0, 0, .7);
                 transform: translateX(-105%);
                 transition: transform .32s var(--ease);
-            }
-
-            body.sidebar-open .sidebar {
-                transform: translateX(0);
             }
 
             body.sidebar-open {
                 overflow: hidden;
             }
 
-            body.sidebar-open .overlay {
+            body.sidebar-open .sidebar {
+                transform: translateX(0);
+            }
+
+            body.sidebar-open .sidebar-overlay {
                 display: block;
             }
 
@@ -769,7 +1251,7 @@
 
             .mobile-menu {
                 display: grid;
-                flex: 0 0 40px;
+                flex: 0 0 41px;
             }
 
             .title-icon {
@@ -777,7 +1259,7 @@
             }
 
             .title-copy h2 {
-                max-width: 42vw;
+                max-width: 40vw;
                 font-size: 13px;
             }
 
@@ -790,13 +1272,18 @@
                 padding-bottom: max(10px, env(safe-area-inset-bottom));
             }
 
-            .editor {
-                border-radius: 16px;
+            .panel {
+                border-radius: 17px;
             }
 
-            .editor-header {
-                min-height: 45px;
-                padding: 0 14px;
+            .editor-toolbar {
+                min-height: 48px;
+                padding: 0 13px;
+            }
+
+            .window-section {
+                min-width: 0;
+                gap: 10px;
             }
 
             .window-controls {
@@ -808,22 +1295,86 @@
                 height: 8px;
             }
 
-            pre {
-                padding: 18px 17px 45px;
+            .editor-file {
+                min-width: 0;
             }
 
-            code {
+            .language-label {
+                display: none;
+            }
+
+            .editor-body pre[class*="language-"] {
+                padding: 20px 17px 55px;
+            }
+
+            .editor-body code[class*="language-"] {
                 font-size: 11.5px;
                 line-height: 1.75;
             }
 
-            .copy-btn {
-                width: 40px;
+            .copy-button {
+                width: 42px;
+                height: 42px;
                 padding: 0;
             }
 
-            .copy-btn span {
+            .copy-button-icon {
+                width: 100%;
+                height: 100%;
+                background: transparent;
+            }
+
+            .copy-button-text {
                 display: none;
+            }
+
+            .rbxm-panel {
+                padding: 14px;
+            }
+
+            .rbxm-layout {
+                justify-content: flex-start;
+            }
+
+            .rbxm-hero {
+                padding: 22px 18px;
+                border-radius: 19px;
+            }
+
+            .rbxm-heading {
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .rbxm-large-icon {
+                width: 57px;
+                height: 57px;
+                flex-basis: 57px;
+                border-radius: 17px;
+                font-size: 27px;
+            }
+
+            .rbxm-title-area h2 {
+                font-size: 20px;
+                letter-spacing: -.4px;
+            }
+
+            .rbxm-information {
+                grid-template-columns: 1fr;
+                gap: 9px;
+            }
+
+            .info-card:last-child {
+                grid-column: auto;
+            }
+
+            .rbxm-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .download-button {
+                width: 100%;
             }
 
             .toast {
@@ -834,13 +1385,13 @@
             }
         }
 
-        @media (max-width: 380px) {
-            .whatsapp {
+        @media (max-width: 390px) {
+            .whatsapp-button {
                 display: none;
             }
 
             .title-copy h2 {
-                max-width: 50vw;
+                max-width: 49vw;
             }
         }
 
@@ -859,11 +1410,13 @@
 <body>
     <div class="app">
 
-        <aside class="sidebar" id="sidebar">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="brand-row">
                     <div class="brand-logo">
                         <i class="ph-bold ph-code"></i>
+
                         <img
                             src="logo.png"
                             alt="Logo Script Studio"
@@ -888,28 +1441,51 @@
 
                 <div class="search-box">
                     <i class="ph ph-magnifying-glass"></i>
+
                     <input
                         id="search-input"
                         type="search"
-                        placeholder="Cari script..."
+                        placeholder="Cari script atau RBXM..."
                         autocomplete="off"
                     >
                 </div>
 
-                <div class="filters" aria-label="Filter script">
-                    <button class="filter-btn active" data-filter="all">
+                <div class="filters">
+                    <button
+                        class="filter-btn active"
+                        type="button"
+                        data-filter="all"
+                    >
                         Semua
                     </button>
-                    <button class="filter-btn" data-filter="script">
+
+                    <button
+                        class="filter-btn"
+                        type="button"
+                        data-filter="script"
+                    >
                         Script
                     </button>
-                    <button class="filter-btn" data-filter="loadstring">
+
+                    <button
+                        class="filter-btn"
+                        type="button"
+                        data-filter="loadstring"
+                    >
                         Loadstring
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        type="button"
+                        data-filter="rbxm"
+                    >
+                        File RBXM
                     </button>
                 </div>
             </div>
 
-            <div class="list-label">
+            <div class="list-heading">
                 <span>Library</span>
                 <span class="list-count" id="list-count">0</span>
             </div>
@@ -922,13 +1498,15 @@
             </ul>
 
             <div class="sidebar-footer">
-                <div class="status">
+                <div class="online-status">
                     <span class="status-dot"></span>
                     <span>Community resources online</span>
                 </div>
             </div>
         </aside>
 
+
+        <!-- MAIN CONTENT -->
         <main class="main">
             <header class="topbar">
                 <div class="title-group">
@@ -941,19 +1519,22 @@
                         <i class="ph-bold ph-list"></i>
                     </button>
 
-                    <div class="title-icon">
-                        <i id="content-icon" class="ph-bold ph-terminal-window"></i>
+                    <div class="title-icon" id="title-icon-box">
+                        <i
+                            id="content-icon"
+                            class="ph-bold ph-terminal-window"
+                        ></i>
                     </div>
 
                     <div class="title-copy">
-                        <h2 id="content-title">Pilih script dari library</h2>
-                        <p id="content-type">Script preview</p>
+                        <h2 id="content-title">Pilih file dari library</h2>
+                        <p id="content-type">Script Studio</p>
                     </div>
                 </div>
 
                 <div class="topbar-actions">
                     <a
-                        class="icon-btn whatsapp"
+                        class="icon-button whatsapp-button"
                         href="https://whatsapp.com/channel/0029VbDd3WGCnA7vWfsEBE3y"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -964,48 +1545,190 @@
                     </a>
 
                     <button
-                        id="copy-btn"
-                        class="copy-btn"
+                        id="copy-button"
+                        class="copy-button"
                         type="button"
-                        onclick="copyText()"
+                        onclick="copyScript()"
                     >
-                        <i class="ph-bold ph-copy"></i>
-                        <span>Salin kode</span>
+                        <span class="copy-button-icon">
+                            <i class="ph-bold ph-copy"></i>
+                        </span>
+
+                        <span class="copy-button-text">
+                            Salin script
+                        </span>
                     </button>
                 </div>
             </header>
 
             <section class="workspace">
-                <div class="editor" id="editor">
-                    <div class="editor-header">
-                        <div class="window-controls" aria-hidden="true">
-                            <span class="window-dot"></span>
-                            <span class="window-dot"></span>
-                            <span class="window-dot"></span>
+
+                <!-- SCRIPT PREVIEW -->
+                <div
+                    class="panel script-panel"
+                    id="script-panel"
+                >
+                    <div class="editor-toolbar">
+                        <div class="window-section">
+                            <div
+                                class="window-controls"
+                                aria-hidden="true"
+                            >
+                                <span class="window-dot"></span>
+                                <span class="window-dot"></span>
+                                <span class="window-dot"></span>
+                            </div>
+
+                            <div class="editor-file">
+                                <i class="ph-bold ph-file-code"></i>
+                                <span id="script-file-name">preview.luau</span>
+                            </div>
                         </div>
 
-                        <div class="file-meta">
-                            <i class="ph-bold ph-file-code"></i>
-                            <span id="file-name">preview.lua</span>
+                        <div class="language-label">
+                            <i class="ph-bold ph-code"></i>
+                            Luau
                         </div>
                     </div>
 
                     <div class="editor-body">
-                        <pre><code id="raw-content">-- Pilih script dari library untuk melihat kode.</code></pre>
+                        <pre class="language-lua"><code
+                            id="script-code"
+                            class="language-lua"
+                        >-- Pilih script dari library untuk melihat kode.</code></pre>
+                    </div>
+                </div>
+
+
+                <!-- RBXM CUSTOM PREVIEW -->
+                <div
+                    class="panel rbxm-panel hidden"
+                    id="rbxm-panel"
+                >
+                    <div class="rbxm-layout">
+                        <div class="rbxm-hero">
+                            <div class="rbxm-heading">
+                                <div class="rbxm-large-icon">
+                                    <i class="ph-duotone ph-cube"></i>
+                                </div>
+
+                                <div class="rbxm-title-area">
+                                    <p>Roblox Model File</p>
+                                    <h2 id="rbxm-preview-title">Model RBXM</h2>
+                                </div>
+                            </div>
+
+                            <p class="rbxm-description">
+                                File model Roblox yang dapat diunduh dan
+                                diimpor ke Roblox Studio.
+                            </p>
+
+                            <div class="rbxm-information">
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="ph-bold ph-file"></i>
+                                        Nama file
+                                    </div>
+
+                                    <div
+                                        class="info-value"
+                                        id="rbxm-file-name"
+                                    >
+                                        -
+                                    </div>
+                                </div>
+
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="ph-bold ph-hard-drives"></i>
+                                        Ukuran
+                                    </div>
+
+                                    <div
+                                        class="info-value"
+                                        id="rbxm-file-size"
+                                    >
+                                        -
+                                    </div>
+                                </div>
+
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="ph-bold ph-cube"></i>
+                                        Tipe file
+                                    </div>
+
+                                    <div
+                                        class="info-value"
+                                        id="rbxm-file-type"
+                                    >
+                                        RBXM — Roblox Model
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rbxm-actions">
+                                <div class="rbxm-safe-note">
+                                    <i class="ph-bold ph-shield-check"></i>
+
+                                    <span>
+                                        File disediakan langsung oleh
+                                        FORKT Community.
+                                    </span>
+                                </div>
+
+                                <a
+                                    id="rbxm-download-button"
+                                    class="download-button"
+                                    href="#"
+                                    download
+                                >
+                                    <i class="ph-bold ph-download-simple"></i>
+                                    Download RBXM
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <div class="overlay" onclick="closeSidebar()"></div>
+    <div
+        class="sidebar-overlay"
+        onclick="closeSidebar()"
+    ></div>
 
-    <div class="toast" id="toast">
+    <div
+        class="toast"
+        id="toast"
+    >
         <i class="ph-bold ph-check-circle"></i>
-        <span>Kode berhasil disalin</span>
+        <span>Script berhasil disalin</span>
     </div>
 
     <script>
+        /* =====================================================
+           LUAU SYNTAX SUPPORT
+        ===================================================== */
+
+        if (window.Prism && Prism.languages.lua) {
+            Prism.languages.lua.keyword =
+                /\b(?:and|break|continue|do|else|elseif|end|export|false|for|function|if|in|local|nil|not|or|repeat|return|then|true|type|until|while)\b/;
+
+            Prism.languages.insertBefore("lua", "function", {
+                builtin: {
+                    pattern:
+                        /\b(?:assert|collectgarbage|error|getfenv|getmetatable|ipairs|loadstring|newproxy|next|pairs|pcall|print|rawequal|rawget|rawlen|rawset|require|select|setfenv|setmetatable|tonumber|tostring|type|typeof|unpack|warn|xpcall|game|workspace|script|shared|task|Instance|Enum|Vector2|Vector3|CFrame|Color3|BrickColor|UDim|UDim2|Ray|Region3|TweenInfo|Random|DateTime|buffer|table|string|math|utf8|coroutine|debug|os)\b/
+                }
+            });
+        }
+
+
+        /* =====================================================
+           ELEMENT REFERENCES
+        ===================================================== */
+
         const menuList = document.getElementById("menu-list");
         const listCount = document.getElementById("list-count");
         const searchInput = document.getElementById("search-input");
@@ -1013,22 +1736,173 @@
         const contentTitle = document.getElementById("content-title");
         const contentType = document.getElementById("content-type");
         const contentIcon = document.getElementById("content-icon");
+        const titleIconBox = document.getElementById("title-icon-box");
 
-        const rawContent = document.getElementById("raw-content");
-        const copyBtn = document.getElementById("copy-btn");
-        const fileName = document.getElementById("file-name");
-        const editor = document.getElementById("editor");
+        const scriptPanel = document.getElementById("script-panel");
+        const scriptCode = document.getElementById("script-code");
+        const scriptFileName = document.getElementById("script-file-name");
+        const copyButton = document.getElementById("copy-button");
+
+        const rbxmPanel = document.getElementById("rbxm-panel");
+        const rbxmPreviewTitle =
+            document.getElementById("rbxm-preview-title");
+        const rbxmFileName =
+            document.getElementById("rbxm-file-name");
+        const rbxmFileSize =
+            document.getElementById("rbxm-file-size");
+        const rbxmFileType =
+            document.getElementById("rbxm-file-type");
+        const rbxmDownloadButton =
+            document.getElementById("rbxm-download-button");
+
         const toast = document.getElementById("toast");
 
-        let scriptData = [];
-        let activeFilter = "all";
-        let activeItem = null;
-        let toastTimer;
 
+        /* =====================================================
+           APPLICATION STATE
+        ===================================================== */
+
+        let scriptItems = [];
+        let rbxmItems = [];
+        let allItems = [];
+
+        let activeFilter = "all";
+        let activeItemId = null;
+        let currentRawCode = "";
+        let toastTimer = null;
+
+
+        /* =====================================================
+           INITIALIZE RBXM DATA
+        ===================================================== */
+
+        try {
+            rbxmItems = JSON.parse(
+                document.getElementById("rbxm-data").textContent
+            );
+        } catch (error) {
+            rbxmItems = [];
+        }
+
+
+        /* =====================================================
+           HELPERS
+        ===================================================== */
+        async function loadRbxmFromGitHub() {
+            const hostname = window.location.hostname;
+            const pathParts = window.location.pathname
+                .split("/")
+                .filter(Boolean);
+        
+            if (!hostname.endsWith(".github.io")) {
+                throw new Error("Repository tidak dapat dideteksi otomatis.");
+            }
+        
+            const owner = hostname.split(".")[0];
+        
+            // Mendukung:
+            // username.github.io/repository/
+            // username.github.io/
+            const repository = pathParts[0] || `${owner}.github.io`;
+        
+            const apiUrl =
+                `https://api.github.com/repos/${owner}/${repository}` +
+                `/contents/data/rbxm`;
+        
+            const response = await fetch(apiUrl, {
+                headers: {
+                    Accept: "application/vnd.github+json"
+                },
+                cache: "no-store"
+            });
+        
+            if (!response.ok) {
+                throw new Error("Folder data/rbxm tidak ditemukan.");
+            }
+        
+            const files = await response.json();
+        
+            return files
+                .filter(file =>
+                    file.type === "file" &&
+                    file.name.toLowerCase().endsWith(".rbxm")
+                )
+                .map(file => ({
+                    id: `rbxm-${file.sha}`,
+                    title: file.name.replace(/\.rbxm$/i, ""),
+                    fileName: file.name,
+                    type: "rbxm",
+                    size: file.size,
+                    path: file.path,
+                    downloadUrl: file.download_url
+                }))
+                .sort((a, b) =>
+                    a.fileName.localeCompare(
+                        b.fileName,
+                        "id",
+                        { numeric: true }
+                    )
+                );
+        }
         function escapeHTML(value = "") {
             const element = document.createElement("div");
             element.textContent = String(value);
             return element.innerHTML;
+        }
+
+        function createItemId(prefix, value) {
+            let hash = 0;
+            const text = String(value);
+
+            for (let index = 0; index < text.length; index++) {
+                hash = ((hash << 5) - hash) + text.charCodeAt(index);
+                hash |= 0;
+            }
+
+            return `${prefix}-${Math.abs(hash)}`;
+        }
+
+        function formatFileSize(bytes) {
+            const size = Number(bytes) || 0;
+
+            if (size === 0) {
+                return "0 Byte";
+            }
+
+            const units = ["Byte", "KB", "MB", "GB"];
+            const unitIndex = Math.min(
+                Math.floor(Math.log(size) / Math.log(1024)),
+                units.length - 1
+            );
+
+            const value = size / Math.pow(1024, unitIndex);
+
+            return `${value.toFixed(unitIndex === 0 ? 0 : 2)} ${units[unitIndex]}`;
+        }
+
+        function getFileName(item) {
+            if (item.type === "loadstring") {
+                return "loadstring.luau";
+            }
+
+            const path =
+                item.file ||
+                `data/${String(item.title || "script").replace(/\s+/g, "")}.lua`;
+
+            return path.split("/").pop() || "script.luau";
+        }
+
+        function getFallbackPath(item) {
+            return (
+                item.file ||
+                `data/${String(item.title || "").replace(/\s+/g, "")}.lua`
+            );
+        }
+
+        function replayAnimation(element) {
+            element.style.animation = "none";
+            void element.offsetHeight;
+            element.style.animation = "";
         }
 
         function openSidebar() {
@@ -1039,95 +1913,147 @@
             document.body.classList.remove("sidebar-open");
         }
 
-        async function loadMenu() {
+
+        /* =====================================================
+           LOAD CONFIG.JSON
+        ===================================================== */
+
+        async function loadLibrary() {
             try {
-                const response = await fetch("config.json", {
-                    cache: "no-store"
+                const [configResponse, githubRbxm] = await Promise.all([
+                    fetch("config.json", { cache: "no-store" }),
+                    loadRbxmFromGitHub()
+                ]);
+        
+                if (!configResponse.ok) {
+                    throw new Error("config.json tidak ditemukan.");
+                }
+        
+                const configData = await configResponse.json();
+        
+                scriptItems = configData.map((item, index) => {
+                    const type =
+                        item.type === "loadstring"
+                            ? "loadstring"
+                            : "script";
+        
+                    return {
+                        ...item,
+                        type,
+                        id: item.id || createItemId(
+                            type,
+                            `${item.title}-${index}`
+                        )
+                    };
                 });
-
-                if (!response.ok) {
-                    throw new Error("Gagal memuat config.json");
-                }
-
-                const data = await response.json();
-
-                if (!Array.isArray(data)) {
-                    throw new Error("Format config.json tidak valid");
-                }
-
-                scriptData = data;
+        
+                rbxmItems = githubRbxm;
+                allItems = [...scriptItems, ...rbxmItems];
+        
                 applyFilters();
-
-                if (scriptData.length > 0) {
-                    selectMenuItem(scriptData[0]);
+        
+                if (allItems.length) {
+                    await selectItem(allItems[0]);
+                } else {
+                    showEmptyLibrary();
                 }
             } catch (error) {
+                console.error(error);
+        
                 menuList.innerHTML = `
-                    <li class="empty-list" style="color:#fca5a5">
+                    <li class="empty-list">
                         <i class="ph-duotone ph-warning-circle"></i>
-                        Gagal memuat <strong>config.json</strong>
+                        Gagal memuat library.<br>
+                        ${escapeHTML(error.message)}
                     </li>
                 `;
-
+        
                 listCount.textContent = "0";
-                rawContent.textContent =
-                    "-- Error: config.json gagal dimuat.\n" +
-                    "-- Pastikan file tersedia dan format JSON valid.";
             }
         }
 
-        function applyFilters() {
-            const keyword = searchInput.value.trim().toLowerCase();
+        /* =====================================================
+           FILTER & SEARCH
+        ===================================================== */
 
-            const filteredData = scriptData.filter(item => {
-                const type = item.type || "script";
+        function applyFilters() {
+            const keyword = searchInput.value
+                .trim()
+                .toLowerCase();
+
+            const filteredItems = allItems.filter(item => {
                 const matchesType =
-                    activeFilter === "all" || type === activeFilter;
+                    activeFilter === "all" ||
+                    item.type === activeFilter;
 
                 const searchableText = [
                     item.title,
                     item.description,
+                    item.fileName,
+                    item.file,
                     item.type
-                ].join(" ").toLowerCase();
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
 
-                return matchesType && searchableText.includes(keyword);
+                return (
+                    matchesType &&
+                    searchableText.includes(keyword)
+                );
             });
 
-            renderList(filteredData);
+            renderList(filteredItems);
         }
 
-        function renderList(data) {
-            listCount.textContent = data.length;
+        function renderList(items) {
             menuList.innerHTML = "";
+            listCount.textContent = items.length;
 
-            if (!data.length) {
+            if (items.length === 0) {
                 menuList.innerHTML = `
                     <li class="empty-list">
                         <i class="ph-duotone ph-magnifying-glass"></i>
-                        Script tidak ditemukan.
+                        Tidak ada file yang ditemukan.
                     </li>
                 `;
+
                 return;
             }
 
-            data.forEach(item => {
-                const type = item.type === "loadstring"
-                    ? "loadstring"
-                    : "script";
+            items.forEach(item => {
+                const listItem = document.createElement("li");
+                const isActive = activeItemId === item.id;
 
-                const isLoadstring = type === "loadstring";
-                const itemElement = document.createElement("li");
+                listItem.className =
+                    `menu-item${isActive ? " active" : ""}`;
 
-                itemElement.className =
-                    "menu-item" + (activeItem === item ? " active" : "");
+                listItem.dataset.type = item.type;
 
-                itemElement.innerHTML = `
+                let iconClass = "ph-bold ph-file-code";
+                let badgeClass = "badge-script";
+                let badgeText = "Script";
+                let description =
+                    item.description || "Luau script resource";
+
+                if (item.type === "loadstring") {
+                    iconClass = "ph-bold ph-terminal-window";
+                    badgeClass = "badge-loadstring";
+                    badgeText = "Load";
+                    description =
+                        item.description || "Luau loadstring";
+                }
+
+                if (item.type === "rbxm") {
+                    iconClass = "ph-duotone ph-cube";
+                    badgeClass = "badge-rbxm";
+                    badgeText = "RBXM";
+                    description = `${formatFileSize(item.size)} • Roblox Model`;
+                }
+
+                listItem.innerHTML = `
                     <div class="menu-icon">
-                        <i class="${
-                            isLoadstring
-                                ? "ph-bold ph-terminal-window"
-                                : "ph-bold ph-file-code"
-                        }"></i>
+                        <i class="${iconClass}"></i>
                     </div>
 
                     <div class="menu-content">
@@ -1136,156 +2062,307 @@
                                 ${escapeHTML(item.title || "Tanpa judul")}
                             </div>
 
-                            <span class="badge ${
-                                isLoadstring
-                                    ? "badge-loadstring"
-                                    : "badge-script"
-                            }">
-                                ${isLoadstring ? "Load" : "Script"}
+                            <span class="badge ${badgeClass}">
+                                ${badgeText}
                             </span>
                         </div>
 
-                        ${
-                            item.description
-                                ? `<div class="menu-description">${
-                                    escapeHTML(item.description)
-                                }</div>`
-                                : ""
-                        }
+                        <div class="menu-description">
+                            ${escapeHTML(description)}
+                        </div>
                     </div>
                 `;
 
-                itemElement.addEventListener("click", () => {
-                    selectMenuItem(item);
+                listItem.addEventListener("click", async () => {
+                    await selectItem(item);
 
                     if (window.innerWidth <= 760) {
                         closeSidebar();
                     }
                 });
 
-                menuList.appendChild(itemElement);
+                menuList.appendChild(listItem);
             });
         }
 
-        async function selectMenuItem(item) {
-            activeItem = item;
+
+        /* =====================================================
+           SELECT ITEM
+        ===================================================== */
+
+        async function selectItem(item) {
+            activeItemId = item.id;
             applyFilters();
 
-            const isLoadstring = item.type === "loadstring";
+            if (item.type === "rbxm") {
+                showRbxmPreview(item);
+                return;
+            }
 
-            contentTitle.textContent = item.title || "Tanpa judul";
-            contentType.textContent = isLoadstring
-                ? "Loadstring"
-                : "Lua script";
+            await showScriptPreview(item);
+        }
 
-            contentIcon.className = isLoadstring
-                ? "ph-bold ph-terminal-window"
-                : "ph-bold ph-file-code";
 
-            fileName.textContent = isLoadstring
-                ? "loadstring.lua"
-                : getDisplayFileName(item);
+        /* =====================================================
+           LUAU SCRIPT PREVIEW
+        ===================================================== */
 
-            rawContent.textContent = "-- Memuat kode...";
-            copyBtn.style.display = "none";
+        async function showScriptPreview(item) {
+            rbxmPanel.classList.add("hidden");
+            scriptPanel.classList.remove("hidden");
 
-            replayEditorAnimation();
+            titleIconBox.classList.remove("rbxm");
 
-            if (isLoadstring) {
-                rawContent.textContent =
+            contentTitle.textContent =
+                item.title || "Tanpa judul";
+
+            contentType.textContent =
+                item.type === "loadstring"
+                    ? "Luau Loadstring"
+                    : "Luau Script";
+
+            contentIcon.className =
+                item.type === "loadstring"
+                    ? "ph-bold ph-terminal-window"
+                    : "ph-bold ph-file-code";
+
+            scriptFileName.textContent = getFileName(item);
+
+            copyButton.style.display = "none";
+
+            setHighlightedCode("-- Memuat script...");
+
+            replayAnimation(scriptPanel);
+
+            if (item.type === "loadstring") {
+                currentRawCode =
                     item.code ||
                     "-- Loadstring belum tersedia di config.json";
 
-                copyBtn.style.display = "flex";
+                setHighlightedCode(currentRawCode);
+                copyButton.style.display = "flex";
                 return;
             }
 
             try {
-                const path = item.file || createFallbackPath(item.title);
-                const response = await fetch(path, { cache: "no-store" });
+                const response = await fetch(
+                    getFallbackPath(item),
+                    { cache: "no-store" }
+                );
 
                 if (!response.ok) {
                     throw new Error("File script tidak ditemukan");
                 }
 
-                rawContent.textContent = await response.text();
+                currentRawCode = await response.text();
+
             } catch (error) {
-                rawContent.textContent =
+                currentRawCode =
                     "-- Error: Gagal memuat file script.\n" +
-                    "-- Pastikan path file pada config.json sudah benar.";
+                    "-- Pastikan path file di config.json sudah benar.";
             }
 
-            copyBtn.style.display = "flex";
+            setHighlightedCode(currentRawCode);
+            copyButton.style.display = "flex";
         }
 
-        function createFallbackPath(title = "") {
-            const safeName = title.replace(/\s+/g, "");
-            return `data/${safeName}.lua`;
+        function setHighlightedCode(code) {
+            scriptCode.textContent = code;
+
+            if (window.Prism) {
+                Prism.highlightElement(scriptCode);
+            }
         }
 
-        function getDisplayFileName(item) {
-            const path = item.file || createFallbackPath(item.title);
-            return path.split("/").pop() || "script.lua";
-        }
 
-        function replayEditorAnimation() {
-            editor.style.animation = "none";
-            void editor.offsetHeight;
-            editor.style.animation = "";
-        }
-
-        async function copyText() {
+        /* =====================================================
+           CUSTOM RBXM PREVIEW
+        ===================================================== */
+        async function downloadRbxm(item) {
             try {
-                await navigator.clipboard.writeText(rawContent.textContent);
+                const response = await fetch(item.downloadUrl);
+        
+                if (!response.ok) {
+                    throw new Error("Gagal mengambil file RBXM.");
+                }
+        
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+        
+                link.href = objectUrl;
+                link.download = item.fileName;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+        
+                setTimeout(() => {
+                    URL.revokeObjectURL(objectUrl);
+                }, 1000);
+            } catch (error) {
+                window.open(item.downloadUrl, "_blank", "noopener");
+            }
+        }
+        function showRbxmPreview(item) {
+            scriptPanel.classList.add("hidden");
+            rbxmPanel.classList.remove("hidden");
+
+            copyButton.style.display = "none";
+            currentRawCode = "";
+
+            titleIconBox.classList.add("rbxm");
+
+            contentTitle.textContent =
+                item.title || "File RBXM";
+
+            contentType.textContent =
+                "Roblox Model File";
+
+            contentIcon.className =
+                "ph-duotone ph-cube";
+
+            rbxmPreviewTitle.textContent =
+                item.title || "Model RBXM";
+
+            rbxmFileName.textContent =
+                item.fileName || "-";
+
+            rbxmFileName.title =
+                item.fileName || "";
+
+            rbxmFileSize.textContent =
+                formatFileSize(item.size);
+
+            rbxmFileType.textContent =
+                "RBXM — Roblox Model";
+
+            rbxmDownloadButton.href = "#";
+
+            rbxmDownloadButton.onclick = event => {
+                event.preventDefault();
+                downloadRbxm(item);
+            };
+
+            rbxmDownloadButton.setAttribute(
+                "download",
+                item.fileName || "model.rbxm"
+            );
+
+            replayAnimation(rbxmPanel);
+        }
+
+
+        /* =====================================================
+           COPY SCRIPT
+        ===================================================== */
+
+        async function copyScript() {
+            if (!currentRawCode) {
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(currentRawCode);
             } catch (error) {
                 const textarea = document.createElement("textarea");
-                textarea.value = rawContent.textContent;
+
+                textarea.value = currentRawCode;
                 textarea.style.position = "fixed";
                 textarea.style.opacity = "0";
+                textarea.style.pointerEvents = "none";
 
                 document.body.appendChild(textarea);
+
+                textarea.focus();
                 textarea.select();
                 document.execCommand("copy");
+
                 textarea.remove();
             }
 
-            copyBtn.classList.add("success");
-            copyBtn.innerHTML = `
-                <i class="ph-bold ph-check"></i>
-                <span>Tersalin</span>
+            copyButton.classList.add("success");
+
+            copyButton.innerHTML = `
+                <span class="copy-button-icon">
+                    <i class="ph-bold ph-check"></i>
+                </span>
+
+                <span class="copy-button-text">
+                    Berhasil disalin
+                </span>
             `;
 
             showToast();
 
             setTimeout(() => {
-                copyBtn.classList.remove("success");
-                copyBtn.innerHTML = `
-                    <i class="ph-bold ph-copy"></i>
-                    <span>Salin kode</span>
+                copyButton.classList.remove("success");
+
+                copyButton.innerHTML = `
+                    <span class="copy-button-icon">
+                        <i class="ph-bold ph-copy"></i>
+                    </span>
+
+                    <span class="copy-button-text">
+                        Salin script
+                    </span>
                 `;
-            }, 1800);
+            }, 1900);
         }
 
         function showToast() {
             clearTimeout(toastTimer);
+
             toast.classList.add("show");
 
             toastTimer = setTimeout(() => {
                 toast.classList.remove("show");
-            }, 2200);
+            }, 2300);
         }
 
-        document.querySelectorAll(".filter-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                document.querySelectorAll(".filter-btn").forEach(item => {
-                    item.classList.remove("active");
-                });
 
-                button.classList.add("active");
-                activeFilter = button.dataset.filter;
-                applyFilters();
+        /* =====================================================
+           EMPTY LIBRARY
+        ===================================================== */
+
+        function showEmptyLibrary() {
+            menuList.innerHTML = `
+                <li class="empty-list">
+                    <i class="ph-duotone ph-folder-open"></i>
+                    Library masih kosong.<br>
+                    Tambahkan config.json atau file ke data/rbxm/.
+                </li>
+            `;
+
+            listCount.textContent = "0";
+
+            currentRawCode =
+                "-- Library masih kosong.\n" +
+                "-- Tambahkan script di config.json atau file RBXM di data/rbxm/.";
+
+            setHighlightedCode(currentRawCode);
+        }
+
+
+        /* =====================================================
+           EVENT LISTENERS
+        ===================================================== */
+
+        document
+            .querySelectorAll(".filter-btn")
+            .forEach(button => {
+                button.addEventListener("click", () => {
+                    document
+                        .querySelectorAll(".filter-btn")
+                        .forEach(filterButton => {
+                            filterButton.classList.remove("active");
+                        });
+
+                    button.classList.add("active");
+                    activeFilter = button.dataset.filter;
+
+                    applyFilters();
+                });
             });
-        });
 
         searchInput.addEventListener("input", applyFilters);
 
@@ -1304,11 +2381,28 @@
                     openSidebar();
                 }
 
-                setTimeout(() => searchInput.focus(), 100);
+                setTimeout(() => {
+                    searchInput.focus();
+                }, 100);
+            }
+
+            if (
+                (event.ctrlKey || event.metaKey) &&
+                event.key.toLowerCase() === "c" &&
+                window.getSelection().toString() === "" &&
+                currentRawCode
+            ) {
+                event.preventDefault();
+                copyScript();
             }
         });
 
-        loadMenu();
+
+        /* =====================================================
+           START APP
+        ===================================================== */
+
+        loadLibrary();
     </script>
 </body>
 </html>
