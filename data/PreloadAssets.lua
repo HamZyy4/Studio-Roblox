@@ -1,168 +1,428 @@
--- SSS ( ServerScriptService )
--- BISMILLAH INSYALLAH GA NGELEG
--- Developer By : Forkt Community
+-- ReplicatedFirst | LocalScript "UniversalPreloader"
+-- Universal Automatic Asset Preloader
+-- Developed by Forkt Community
 
-local RunService = game:GetService("RunService")
+local ContentProvider = game:GetService("ContentProvider")
 local Players = game:GetService("Players")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
-local ContentProvider = game:GetService("ContentProvider")
+local Lighting = game:GetService("Lighting")
+local SoundService = game:GetService("SoundService")
+local StarterGui = game:GetService("StarterGui")
+local StarterPack = game:GetService("StarterPack")
+local StarterPlayer = game:GetService("StarterPlayer")
 
--- ==========================================
--- ⚙️ CONFIGURATION (MAXIMAL EDITION)
--- ==========================================
-local Config = {
-    -- 📦 Aggressive Preload Settings
-    PreloadAssets = true,
-    PreloadSounds = true,      
-    PreloadMeshes = true,
-    PreloadTextures = true,    
-    PreloadAnimations = true,  
-    PreloadBatchSize = 50,     
-    
-    -- 🛡️ Network Security Optimization
-    OptimizeNetwork = true,    
-    
-    -- 📊 Performance & Security
-    MonitoringEnabled = true,
-    MonitorRateLimit = 2,
-    
-    -- 🐛 Debugging
-    DebugMode = true,
+local player = Players.LocalPlayer
+
+--==================================================
+-- KONFIGURASI
+--==================================================
+
+local CONFIG = {
+	Enabled = true,
+
+	-- Jumlah aset per proses preload.
+	BatchSize = 30,
+
+	-- Jeda antarbatch agar loading tidak terlalu berat.
+	BatchDelay = 0.03,
+
+	-- Yield ketika melakukan scanning.
+	ScanYieldEvery = 300,
+
+	-- Batas keamanan jumlah instance aset.
+	MaxAssets = 5000,
+
+	-- Otomatis preload aset yang muncul setelah game berjalan.
+	PreloadNewAssets = true,
+	DynamicPreloadDelay = 0.5,
+
+	DebugMode = true,
 }
 
--- ==========================================
--- 📦 1. SERVER ASSET PRELOADER
--- ==========================================
-local AssetPreloader = {}
-AssetPreloader.AssetsToPreload = {}
+--==================================================
+-- JENIS INSTANCE YANG MEMILIKI ASET
+--==================================================
 
-function AssetPreloader:Initialize()
-    if not Config.PreloadAssets then return end
-    if Config.DebugMode then print("[FORKT] Memulai scanning aset...") end
-    
-    task.spawn(function()
-        local assets = Workspace:GetDescendants()
-        local startTime = os.clock()
-        
-        for _, obj in ipairs(assets) do
-            -- Smart yield
-            if os.clock() - startTime >= 0.015 then
-                task.wait()
-                startTime = os.clock()
-            end
-            
-            if Config.PreloadSounds and obj:IsA("Sound") and obj.SoundId ~= "" then
-                table.insert(self.AssetsToPreload, obj.SoundId)
-            elseif Config.PreloadMeshes and obj:IsA("MeshPart") and obj.MeshId ~= "" then
-                table.insert(self.AssetsToPreload, obj.MeshId)
-            elseif Config.PreloadTextures and (obj:IsA("Decal") or obj:IsA("Texture")) and obj.Texture ~= "" then
-                table.insert(self.AssetsToPreload, obj.Texture)
-            elseif Config.PreloadAnimations and obj:IsA("Animation") and obj.AnimationId ~= "" then
-                table.insert(self.AssetsToPreload, obj.AnimationId)
-            end
-        end
-        
-        if #self.AssetsToPreload > 0 then
-            self:StartPreloading()
-        end
-    end)
+local ASSET_CLASSES = {
+	Animation = true,
+	Sound = true,
+
+	Decal = true,
+	Texture = true,
+
+	ImageLabel = true,
+	ImageButton = true,
+
+	TextLabel = true,
+	TextButton = true,
+	TextBox = true,
+
+	MeshPart = true,
+	SpecialMesh = true,
+	SurfaceAppearance = true,
+	MaterialVariant = true,
+
+	ParticleEmitter = true,
+	Beam = true,
+	Trail = true,
+
+	VideoFrame = true,
+	Sky = true,
+
+	Shirt = true,
+	Pants = true,
+	ShirtGraphic = true,
+	CharacterMesh = true,
+
+	Tool = true,
+	WrapLayer = true,
+	WrapTarget = true,
+	HumanoidDescription = true,
+}
+
+--==================================================
+-- INTERNAL
+--==================================================
+
+local PREFIX = "[FORKT PRELOADER]"
+
+local scannedInstances = setmetatable({}, {
+	__mode = "k",
+})
+
+local dynamicQueue = {}
+local dynamicQueueLookup = setmetatable({}, {
+	__mode = "k",
+})
+
+local connections = {}
+local totalDiscovered = 0
+local totalBatches = 0
+local isDestroyed = false
+
+local function log(message, ...)
+	if not CONFIG.DebugMode then
+		return
+	end
+
+	print(string.format(
+		"%s %s",
+		PREFIX,
+		string.format(message, ...)
+	))
 end
 
-function AssetPreloader:StartPreloading()
-    local startTime = tick()
-    local batchSize = Config.PreloadBatchSize
-    
-    for i = 1, #self.AssetsToPreload, batchSize do
-        local batch = {}
-        for j = i, math.min(i + batchSize - 1, #self.AssetsToPreload) do
-            table.insert(batch, self.AssetsToPreload[j])
-        end
-        
-        pcall(function() ContentProvider:PreloadAsync(batch) end)
-        task.wait(0.1) 
-    end
-    
-    if Config.DebugMode then 
-        print(string.format("[FORKT] ✅ Load %d aset selesai (%.2f detik)", #self.AssetsToPreload, tick() - startTime)) 
-    end
+local function warning(message, ...)
+	warn(string.format(
+		"%s %s",
+		PREFIX,
+		string.format(message, ...)
+	))
 end
 
--- ==========================================
--- 🛡️ 2. NETWORK SECURITY (ANTI-FLING)
--- ==========================================
-local NetworkOptimizer = {}
-
-function NetworkOptimizer:Initialize()
-    if not Config.OptimizeNetwork then return end
-    
-    task.spawn(function()
-        Workspace.DescendantAdded:Connect(function(descendant)
-            if descendant:IsA("BasePart") and not descendant.Anchored then
-                pcall(function()
-                    if descendant:CanSetNetworkOwnership() then
-                        descendant:SetNetworkOwner(nil)
-                    end
-                end)
-            end
-        end)
-    end)
-    
-    if Config.DebugMode then print("[FORKT] 🛡️ Anti-Fling Aktif") end
+local function isAssetInstance(instance)
+	return instance
+		and ASSET_CLASSES[instance.ClassName] == true
 end
 
--- ==========================================
--- 📊 3. PERFORMANCE MONITORING
--- ==========================================
-local PerformanceStats = {}
-PerformanceStats.PlayerStats = {}
-PerformanceStats.RateLimits = {} 
+local function registerAsset(instance, destination)
+	if not isAssetInstance(instance) then
+		return false
+	end
 
-function PerformanceStats:Initialize()
-    if not Config.MonitoringEnabled then return end
-    
-    local folder = ReplicatedStorage:FindFirstChild("ForktPerformance") or Instance.new("Folder")
-    folder.Name = "ForktPerformance"
-    folder.Parent = ReplicatedStorage
-    
-    local statsRemote = folder:FindFirstChild("SendStats") or Instance.new("RemoteEvent")
-    statsRemote.Name = "SendStats"
-    statsRemote.Parent = folder
-    
-    statsRemote.OnServerEvent:Connect(function(player, stats)
-        local lastUpdate = self.RateLimits[player.UserId] or 0
-        if tick() - lastUpdate < Config.MonitorRateLimit then return end
-        self.RateLimits[player.UserId] = tick()
-        
-        if type(stats) == "table" then
-            local fps = tonumber(stats.FPS)
-            local ping = tonumber(stats.Ping)
-            
-            if fps and ping then
-                self.PlayerStats[player.UserId] = {
-                    FPS = math.clamp(fps, 0, 1000),
-                    Ping = math.clamp(ping, 0, 9999),
-                    Timestamp = os.time()
-                }
-            end
-        end
-    end)
-    
-    Players.PlayerRemoving:Connect(function(player)
-        self.PlayerStats[player.UserId] = nil
-        self.RateLimits[player.UserId] = nil
-    end)
-    
-    if Config.DebugMode then print("[FORKT] 📊 Telemetri Standby") end
+	if scannedInstances[instance] then
+		return false
+	end
+
+	if totalDiscovered >= CONFIG.MaxAssets then
+		return false
+	end
+
+	scannedInstances[instance] = true
+	totalDiscovered += 1
+	table.insert(destination, instance)
+
+	return true
 end
 
--- ==========================================
--- 🚀 BOOTSTRAPPER (AUTO-RUN)
--- ==========================================
-task.spawn(function()
-    AssetPreloader:Initialize()
-    NetworkOptimizer:Initialize()
-    task.wait(0.1)
-    PerformanceStats:Initialize()
-    print("[FORKT] 🚀 ENGINE ONLINE (Max Performance)")
+--==================================================
+-- PRELOAD BATCH
+--==================================================
+
+local function preloadBatch(batch)
+	if #batch == 0 or isDestroyed then
+		return
+	end
+
+	totalBatches += 1
+
+	local failedContent = {}
+	local failedLookup = {}
+
+	local success, errorMessage = pcall(function()
+		ContentProvider:PreloadAsync(
+			batch,
+			function(contentId, status)
+				if status ~= Enum.AssetFetchStatus.Success
+					and not failedLookup[contentId]
+				then
+					failedLookup[contentId] = true
+					table.insert(failedContent, contentId)
+				end
+			end
+		)
+	end)
+
+	if not success then
+		warning(
+			"Batch #%d gagal diproses: %s",
+			totalBatches,
+			tostring(errorMessage)
+		)
+
+		return
+	end
+
+	if CONFIG.DebugMode and #failedContent > 0 then
+		warning(
+			"Batch #%d memiliki %d konten gagal/tidak diizinkan.",
+			totalBatches,
+			#failedContent
+		)
+	end
+end
+
+local function preloadList(assetList)
+	if #assetList == 0 then
+		return
+	end
+
+	for index = 1, #assetList, CONFIG.BatchSize do
+		if isDestroyed then
+			return
+		end
+
+		local batch = {}
+		local finalIndex = math.min(
+			index + CONFIG.BatchSize - 1,
+			#assetList
+		)
+
+		for assetIndex = index, finalIndex do
+			local asset = assetList[assetIndex]
+
+			if asset and asset.Parent then
+				table.insert(batch, asset)
+			end
+		end
+
+		preloadBatch(batch)
+
+		if finalIndex < #assetList then
+			task.wait(CONFIG.BatchDelay)
+		end
+	end
+end
+
+--==================================================
+-- AUTOMATIC SCANNER
+--==================================================
+
+local function scanRoot(root, destination)
+	if not root or isDestroyed then
+		return
+	end
+
+	registerAsset(root, destination)
+
+	local descendants = root:GetDescendants()
+
+	for index, instance in ipairs(descendants) do
+		if totalDiscovered >= CONFIG.MaxAssets then
+			break
+		end
+
+		registerAsset(instance, destination)
+
+		if index % CONFIG.ScanYieldEvery == 0 then
+			task.wait()
+		end
+	end
+end
+
+local function getScanRoots()
+	local roots = {
+		ReplicatedFirst,
+		ReplicatedStorage,
+		Workspace,
+		Lighting,
+		SoundService,
+		StarterGui,
+		StarterPack,
+		StarterPlayer,
+	}
+
+	local playerGui = player:FindFirstChildOfClass("PlayerGui")
+
+	if playerGui then
+		table.insert(roots, playerGui)
+	end
+
+	local backpack = player:FindFirstChildOfClass("Backpack")
+
+	if backpack then
+		table.insert(roots, backpack)
+	end
+
+	return roots
+end
+
+--==================================================
+-- ASET BARU/DINAMIS
+--==================================================
+
+local function queueDynamicAsset(instance)
+	if not CONFIG.PreloadNewAssets then
+		return
+	end
+
+	if not isAssetInstance(instance) then
+		return
+	end
+
+	if scannedInstances[instance] or dynamicQueueLookup[instance] then
+		return
+	end
+
+	if totalDiscovered >= CONFIG.MaxAssets then
+		return
+	end
+
+	scannedInstances[instance] = true
+	dynamicQueueLookup[instance] = true
+	totalDiscovered += 1
+
+	table.insert(dynamicQueue, instance)
+end
+
+local function connectDynamicScanner(root)
+	if not root then
+		return
+	end
+
+	local connection = root.DescendantAdded:Connect(queueDynamicAsset)
+	table.insert(connections, connection)
+end
+
+local function startDynamicWorker()
+	task.spawn(function()
+		while not isDestroyed do
+			task.wait(CONFIG.DynamicPreloadDelay)
+
+			if #dynamicQueue == 0 then
+				continue
+			end
+
+			local pendingAssets = dynamicQueue
+			dynamicQueue = {}
+
+			for _, instance in ipairs(pendingAssets) do
+				dynamicQueueLookup[instance] = nil
+			end
+
+			preloadList(pendingAssets)
+
+			log(
+				"%d aset dinamis selesai diproses.",
+				#pendingAssets
+			)
+		end
+	end)
+end
+
+--==================================================
+-- CLEANUP
+--==================================================
+
+script.Destroying:Connect(function()
+	isDestroyed = true
+
+	for _, connection in ipairs(connections) do
+		connection:Disconnect()
+	end
+
+	table.clear(connections)
+	table.clear(dynamicQueue)
 end)
+
+--==================================================
+-- BOOTSTRAP
+--==================================================
+
+local function initialize()
+	if not CONFIG.Enabled then
+		return
+	end
+
+	local startTime = os.clock()
+
+	log("Memulai Universal Asset Preloader...")
+	log("Credits: Forkt Community")
+
+	local roots = getScanRoots()
+
+	-- Hubungkan pendeteksi terlebih dahulu agar aset baru tidak terlewat.
+	if CONFIG.PreloadNewAssets then
+		for _, root in ipairs(roots) do
+			connectDynamicScanner(root)
+		end
+
+		-- PlayerGui/Backpack mungkin dibuat setelah script berjalan.
+		table.insert(connections, player.ChildAdded:Connect(function(child)
+			if child:IsA("PlayerGui") or child:IsA("Backpack") then
+				connectDynamicScanner(child)
+
+				local assets = {}
+				scanRoot(child, assets)
+				preloadList(assets)
+			end
+		end))
+	end
+
+	local initialAssets = {}
+
+	for _, root in ipairs(roots) do
+		if totalDiscovered >= CONFIG.MaxAssets then
+			break
+		end
+
+		scanRoot(root, initialAssets)
+	end
+
+	log("%d instance aset ditemukan.", #initialAssets)
+
+	preloadList(initialAssets)
+
+	log(
+		"✅ Preload awal selesai dalam %.2f detik.",
+		os.clock() - startTime
+	)
+
+	if totalDiscovered >= CONFIG.MaxAssets then
+		warning(
+			"Batas maksimum %d aset tercapai.",
+			CONFIG.MaxAssets
+		)
+	end
+
+	if CONFIG.PreloadNewAssets then
+		startDynamicWorker()
+		log("Pemantauan aset dinamis aktif.")
+	end
+
+	log("🚀 ENGINE ONLINE — Forkt Community")
+end
+
+task.spawn(initialize)
