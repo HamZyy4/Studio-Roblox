@@ -2,646 +2,1312 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Script Studio - FORKT Community</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Phosphor Icons -->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+    >
+
+    <title>Script Studio — FORKT Community</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         :root {
-            /* Premium Dark Theme */
-            --bg-base: #050505;
-            --bg-surface: #0a0a0c;
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --glass-hover: rgba(255, 255, 255, 0.05);
-            
-            /* Text Colors */
-            --text-primary: #f8fafc;
-            --text-secondary: #8b949e;
-            --text-muted: #4b5563;
-            
-            /* Accents */
-            --accent-purple: #8b5cf6;
-            --accent-purple-glow: rgba(139, 92, 246, 0.25);
-            --accent-green: #10b981;
-            --accent-green-glow: rgba(16, 185, 129, 0.15);
-            --wa-color: #25D366;
-            
-            /* Layout */
-            --sidebar-width: 360px;
-            --border-radius-lg: 16px;
-            --border-radius-md: 12px;
-            --border-radius-sm: 8px;
+            color-scheme: dark;
+
+            --bg: #07070a;
+            --surface: #0c0c11;
+            --surface-2: #111119;
+            --surface-3: #171721;
+
+            --border: rgba(255,255,255,.075);
+            --border-hover: rgba(255,255,255,.14);
+
+            --text: #f7f7fa;
+            --text-soft: #a3a3b2;
+            --text-muted: #676778;
+
+            --primary: #8b5cf6;
+            --primary-light: #c4b5fd;
+            --primary-glow: rgba(139,92,246,.22);
+
+            --green: #22c55e;
+            --red: #ef4444;
+
+            --sidebar-width: 340px;
+            --radius-xl: 22px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+
+            --ease: cubic-bezier(.2,.8,.2,1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-primary);
-            display: flex;
-            height: 100vh;
+            min-height: 100dvh;
             overflow: hidden;
-            user-select: none; 
-            /* Premium Ambient Background */
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.08), transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05), transparent 40%);
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 0%, rgba(139,92,246,.13), transparent 34%),
+                radial-gradient(circle at 100% 100%, rgba(34,197,94,.07), transparent 30%),
+                var(--bg);
         }
 
-        .code-box { user-select: text; }
+        button,
+        input {
+            font: inherit;
+        }
 
-        /* Custom Scrollbar (Slim & Elegant) */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        button {
+            color: inherit;
+        }
 
-        /* ================= SIDEBAR ================= */
+        ::selection {
+            color: white;
+            background: rgba(139,92,246,.55);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            background: rgba(255,255,255,.12);
+        }
+
+        /* APP LAYOUT */
+
+        .app {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+            width: 100%;
+            height: 100dvh;
+        }
+
         .sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-surface);
-            border-right: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 30;
+            min-width: 0;
             display: flex;
             flex-direction: column;
-            z-index: 10;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            background: rgba(10,10,15,.88);
+            border-right: 1px solid var(--border);
+            backdrop-filter: blur(24px);
         }
 
-        /* Brand Area */
-        .brand {
-            padding: 24px;
+        .main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR HEADER */
+
+        .sidebar-header {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-row {
             display: flex;
             align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid var(--glass-border);
+            gap: 13px;
+        }
+
+        .brand-logo {
             position: relative;
-        }
-
-        .brand img {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--border-radius-md);
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .brand-text h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(to right, #fff, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand-text p {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 2px;
-        }
-
-        /* Filter Pill Tabs */
-        .filter-tabs {
-            display: flex;
-            gap: 6px;
-            padding: 16px 24px 8px 24px;
-        }
-
-        .pill {
-            flex: 1;
-            padding: 8px 0;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .pill:hover {
-            color: var(--text-primary);
-            background: var(--glass-hover);
-        }
-
-        .pill.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        /* List Items */
-        #menu-list {
-            list-style: none;
-            overflow-y: auto;
-            flex: 1;
-            padding: 8px 16px 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        #menu-list li {
-            padding: 14px 16px;
-            border-radius: var(--border-radius-md);
-            cursor: pointer;
-            background: transparent;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            position: relative;
+            width: 44px;
+            height: 44px;
+            flex: 0 0 44px;
+            display: grid;
+            place-items: center;
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 14px;
+            color: white;
+            background:
+                linear-gradient(145deg, rgba(139,92,246,.95), rgba(91,33,182,.65));
+            box-shadow: 0 10px 30px rgba(139,92,246,.25);
         }
 
-        /* Smooth Hide/Show Animation for filtering */
-        #menu-list li.hidden {
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-logo i {
+            position: absolute;
+            font-size: 22px;
+            z-index: -1;
+        }
+
+        .brand-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .brand-copy h1 {
+            font-size: 16px;
+            line-height: 1.3;
+            font-weight: 800;
+            letter-spacing: -.35px;
+        }
+
+        .brand-copy p {
+            margin-top: 3px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+
+        .mobile-close {
             display: none;
         }
 
-        .item-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
+        /* SEARCH */
+
+        .search-box {
+            position: relative;
+            margin-top: 20px;
         }
 
-        #menu-list li .item-title {
-            font-weight: 600;
-            font-size: 0.95rem;
+        .search-box > i {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            color: var(--text-muted);
+            font-size: 17px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 43px;
+            padding: 0 14px 0 41px;
+            color: var(--text);
+            outline: none;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: rgba(255,255,255,.035);
+            transition: .2s ease;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box input:focus {
+            border-color: rgba(139,92,246,.55);
+            background: rgba(139,92,246,.06);
+            box-shadow: 0 0 0 4px rgba(139,92,246,.09);
+        }
+
+        /* FILTER */
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 12px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: rgba(255,255,255,.025);
+        }
+
+        .filter-btn {
+            min-width: 0;
+            padding: 8px 5px;
+            border: 0;
+            border-radius: 9px;
+            color: var(--text-muted);
+            background: transparent;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text);
+        }
+
+        .filter-btn.active {
+            color: white;
+            background: var(--surface-3);
+            box-shadow: 0 3px 12px rgba(0,0,0,.3);
+        }
+
+        /* SCRIPT LIST */
+
+        .list-label {
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
-        .item-icon {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
-        }
-
-        /* Badges */
-        .item-badge {
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 6px;
+            justify-content: space-between;
+            padding: 18px 21px 9px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
+        }
+
+        .list-count {
+            display: grid;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 6px;
+            place-items: center;
+            border-radius: 7px;
+            color: var(--text-soft);
+            background: rgba(255,255,255,.05);
+            letter-spacing: 0;
+        }
+
+        #menu-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            overflow-y: auto;
+            padding: 0 12px 18px;
+            list-style: none;
+        }
+
+        .menu-item {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            padding: 13px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .25s var(--ease);
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,.035);
+            border-color: rgba(255,255,255,.05);
+        }
+
+        .menu-item.active {
+            background:
+                linear-gradient(100deg, rgba(139,92,246,.13), rgba(139,92,246,.04));
+            border-color: rgba(139,92,246,.22);
+            box-shadow: inset 3px 0 var(--primary);
+        }
+
+        .menu-icon {
+            width: 36px;
+            height: 36px;
+            flex: 0 0 36px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            color: var(--text-soft);
+            background: rgba(255,255,255,.035);
+            font-size: 17px;
+        }
+
+        .menu-item.active .menu-icon {
+            color: var(--primary-light);
+            border-color: rgba(139,92,246,.25);
+            background: rgba(139,92,246,.13);
+        }
+
+        .menu-content {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .menu-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .menu-title {
+            overflow: hidden;
+            color: #ededf2;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.5;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .menu-description {
+            display: -webkit-box;
+            margin-top: 5px;
+            overflow: hidden;
+            color: var(--text-muted);
+            font-size: 11px;
+            line-height: 1.55;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .badge {
+            flex: 0 0 auto;
+            padding: 4px 6px;
+            border: 1px solid;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
         }
 
         .badge-script {
-            background: rgba(139, 92, 246, 0.1);
             color: #c4b5fd;
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-color: rgba(139,92,246,.22);
+            background: rgba(139,92,246,.09);
         }
 
         .badge-loadstring {
-            background: rgba(16, 185, 129, 0.1);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #86efac;
+            border-color: rgba(34,197,94,.22);
+            background: rgba(34,197,94,.08);
         }
 
-        #menu-list li .item-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
+        .empty-list {
+            padding: 35px 20px;
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.7;
         }
 
-        #menu-list li:hover {
-            background: var(--glass-hover);
+        .empty-list i {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 26px;
         }
 
-        #menu-list li.active {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
+        /* SIDEBAR FOOTER */
+
+        .sidebar-footer {
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
         }
 
-        #menu-list li.active::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 10%; height: 80%; width: 3px;
-            background: var(--text-primary);
-            border-radius: 0 4px 4px 0;
-        }
-
-        #menu-list li.active .item-icon {
-            color: var(--text-primary);
-        }
-
-        /* ================= CONTENT AREA ================= */
-        .content {
-            flex: 1;
+        .status {
             display: flex;
-            flex-direction: column;
-            position: relative;
-            background: radial-gradient(circle at top right, rgba(255,255,255,0.02), transparent 50%);
-        }
-
-        .header {
-            padding: 20px 32px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--glass-border);
-            background: rgba(10, 10, 12, 0.7);
-            backdrop-filter: blur(20px);
-            z-index: 5;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
         }
 
-        .header-title {
-            font-size: 1.15rem;
-            font-weight: 600;
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(34,197,94,.7);
+        }
+
+        /* TOPBAR */
+
+        .topbar {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8,8,12,.65);
+            backdrop-filter: blur(20px);
+        }
+
+        .title-group {
+            min-width: 0;
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-primary);
         }
 
-        .header-title i {
-            color: var(--accent-purple);
-            background: var(--accent-purple-glow);
-            padding: 8px;
-            border-radius: 8px;
+        .mobile-menu {
+            display: none;
         }
 
-        .header-actions {
+        .title-icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(139,92,246,.25);
+            border-radius: 13px;
+            color: var(--primary-light);
+            background: rgba(139,92,246,.11);
+            box-shadow: 0 8px 25px rgba(139,92,246,.1);
+            font-size: 20px;
+        }
+
+        .title-copy {
+            min-width: 0;
+        }
+
+        .title-copy h2 {
+            overflow: hidden;
+            font-size: 14px;
+            font-weight: 750;
+            line-height: 1.4;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .title-copy p {
+            margin-top: 3px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+
+        .topbar-actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 9px;
         }
 
-        .credits {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            border-right: 1px solid var(--glass-border);
-            padding-right: 16px;
+        .icon-btn,
+        .copy-btn,
+        .mobile-menu,
+        .mobile-close {
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: .2s var(--ease);
         }
 
-        .wa-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .icon-btn,
+        .mobile-menu,
+        .mobile-close {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
-            background: rgba(37, 211, 102, 0.1);
-            color: var(--wa-color);
-            border: 1px solid rgba(37, 211, 102, 0.2);
-            text-decoration: none;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: var(--text-soft);
+            background: rgba(255,255,255,.035);
+            font-size: 18px;
         }
 
-        .wa-btn:hover {
-            background: var(--wa-color);
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        .icon-btn:hover,
+        .mobile-menu:hover,
+        .mobile-close:hover {
+            color: white;
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,.07);
         }
 
-        button.copy-btn {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 0 18px;
+        .whatsapp:hover {
+            color: #4ade80;
+            border-color: rgba(34,197,94,.3);
+            background: rgba(34,197,94,.1);
+        }
+
+        .copy-btn {
             height: 40px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            display: none; 
+            display: none;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            padding: 0 16px;
+            border-color: rgba(255,255,255,.9);
+            border-radius: 12px;
+            color: #09090b;
+            background: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            box-shadow: 0 7px 24px rgba(255,255,255,.1);
         }
 
-        button.copy-btn:hover {
-            transform: translateY(-2px);
-            background: #e2e8f0;
+        .copy-btn:hover {
+            background: #e7e7eb;
+            transform: translateY(-1px);
         }
 
-        /* Editor Area */
-        .raw-container {
+        .copy-btn.success {
+            color: white;
+            border-color: var(--green);
+            background: var(--green);
+        }
+
+        /* WORKSPACE */
+
+        .workspace {
+            min-height: 0;
             flex: 1;
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Code box scroll internally */
+            padding: 24px;
+            overflow: hidden;
         }
 
-        .code-box {
-            background: #0d0d11; /* Very dark blue/grey */
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius-lg);
-            flex: 1;
+        .editor {
+            height: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            opacity: 0; 
-            animation: slideUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            background: rgba(11,11,16,.9);
+            box-shadow:
+                0 35px 80px rgba(0,0,0,.45),
+                inset 0 1px rgba(255,255,255,.025);
+            animation: editorIn .45s var(--ease);
         }
 
-        .code-header {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 14px 20px;
+        .editor-header {
+            min-height: 52px;
             display: flex;
-            gap: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 0 17px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,.018);
         }
 
-        .mac-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            opacity: 0.8;
+        .window-controls {
+            display: flex;
+            gap: 7px;
         }
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
+
+        .window-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .window-dot:nth-child(1) { background: #ff5f57; }
+        .window-dot:nth-child(2) { background: #febc2e; }
+        .window-dot:nth-child(3) { background: #28c840; }
+
+        .file-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-family: "Fira Code", monospace;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .file-meta i {
+            color: var(--primary-light);
+            font-size: 14px;
+        }
+
+        .editor-body {
+            position: relative;
+            min-height: 0;
+            flex: 1;
+            overflow: auto;
+        }
 
         pre {
-            padding: 24px;
-            margin: 0;
-            overflow: auto;
-            flex: 1;
+            min-width: max-content;
+            min-height: 100%;
+            padding: 25px 27px 60px;
         }
 
         code {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.95rem;
-            line-height: 1.7;
-            color: #d1d5db;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            display: block;
+            color: #c9cad3;
+            font-family: "Fira Code", monospace;
+            font-size: 13px;
+            line-height: 1.85;
+            white-space: pre;
+            tab-size: 4;
+            user-select: text;
         }
 
-        /* Animations */
-        @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(15px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: none;
+            background: rgba(0,0,0,.65);
+            backdrop-filter: blur(4px);
         }
 
-        /* ================= RESPONSIVE (MOBILE) ================= */
-        @media (max-width: 800px) {
-            body { flex-direction: column; }
-            .sidebar {
-                width: 100%;
-                height: 45vh; /* 45% dari layar untuk list di HP */
-                border-right: none;
-                border-bottom: 1px solid var(--glass-border);
-                box-shadow: none;
+        .toast {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 15px;
+            border: 1px solid rgba(34,197,94,.25);
+            border-radius: 12px;
+            color: #bbf7d0;
+            background: rgba(13,31,22,.96);
+            box-shadow: 0 15px 45px rgba(0,0,0,.45);
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(15px);
+            transition: .25s var(--ease);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes editorIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.99);
             }
-            .content { height: 55vh; }
-            .brand { padding: 16px; }
-            .filter-tabs { padding: 12px 16px 4px 16px; }
-            .raw-container { padding: 16px; }
-            .header { padding: 16px; flex-wrap: wrap; gap: 12px; }
-            .credits { display: none; }
-            
-            /* Sembunyikan mac dots di HP agar header code box lebih lega */
-            .code-header { display: none; }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* TABLET */
+
+        @media (max-width: 1050px) {
+            :root {
+                --sidebar-width: 310px;
+            }
+
+            .workspace {
+                padding: 18px;
+            }
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 760px) {
+            .app {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                inset: 0 auto 0 0;
+                width: min(88vw, 340px);
+                height: 100dvh;
+                border-right: 1px solid var(--border);
+                box-shadow: 25px 0 70px rgba(0,0,0,.65);
+                transform: translateX(-105%);
+                transition: transform .32s var(--ease);
+            }
+
+            body.sidebar-open .sidebar {
+                transform: translateX(0);
+            }
+
+            body.sidebar-open {
+                overflow: hidden;
+            }
+
+            body.sidebar-open .overlay {
+                display: block;
+            }
+
+            .mobile-close {
+                display: grid;
+            }
+
+            .main {
+                height: 100dvh;
+            }
+
+            .topbar {
+                min-height: 68px;
+                padding:
+                    max(10px, env(safe-area-inset-top))
+                    13px
+                    10px;
+            }
+
+            .mobile-menu {
+                display: grid;
+                flex: 0 0 40px;
+            }
+
+            .title-icon {
+                display: none;
+            }
+
+            .title-copy h2 {
+                max-width: 42vw;
+                font-size: 13px;
+            }
+
+            .title-copy p {
+                font-size: 9px;
+            }
+
+            .workspace {
+                padding: 10px;
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+            }
+
+            .editor {
+                border-radius: 16px;
+            }
+
+            .editor-header {
+                min-height: 45px;
+                padding: 0 14px;
+            }
+
+            .window-controls {
+                gap: 5px;
+            }
+
+            .window-dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            pre {
+                padding: 18px 17px 45px;
+            }
+
+            code {
+                font-size: 11.5px;
+                line-height: 1.75;
+            }
+
+            .copy-btn {
+                width: 40px;
+                padding: 0;
+            }
+
+            .copy-btn span {
+                display: none;
+            }
+
+            .toast {
+                right: 14px;
+                bottom: 14px;
+                left: 14px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .whatsapp {
+                display: none;
+            }
+
+            .title-copy h2 {
+                max-width: 50vw;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
         }
     </style>
 </head>
+
 <body>
+    <div class="app">
 
-    <div class="sidebar">
-        <!-- Brand Info -->
-        <div class="brand">
-            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-            <div class="brand-text">
-                <h2>Script Studio</h2>
-                <p>Forkt Community</p>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-row">
+                    <div class="brand-logo">
+                        <i class="ph-bold ph-code"></i>
+                        <img
+                            src="logo.png"
+                            alt="Logo Script Studio"
+                            onerror="this.style.display='none'"
+                        >
+                    </div>
+
+                    <div class="brand-copy">
+                        <h1>Script Studio</h1>
+                        <p>FORKT Community</p>
+                    </div>
+
+                    <button
+                        class="mobile-close"
+                        type="button"
+                        aria-label="Tutup menu"
+                        onclick="closeSidebar()"
+                    >
+                        <i class="ph-bold ph-x"></i>
+                    </button>
+                </div>
+
+                <div class="search-box">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari script..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="filters" aria-label="Filter script">
+                    <button class="filter-btn active" data-filter="all">
+                        Semua
+                    </button>
+                    <button class="filter-btn" data-filter="script">
+                        Script
+                    </button>
+                    <button class="filter-btn" data-filter="loadstring">
+                        Loadstring
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- Pill Tabs Filter -->
-        <div class="filter-tabs">
-            <div class="pill active" onclick="filterList('all', this)">All</div>
-            <div class="pill" onclick="filterList('script', this)">Script</div>
-            <div class="pill" onclick="filterList('loadstring', this)">Loadstring</div>
-        </div>
+            <div class="list-label">
+                <span>Library</span>
+                <span class="list-count" id="list-count">0</span>
+            </div>
 
-        <!-- Menu List -->
-        <ul id="menu-list">
-            <li style="text-align: center; color: var(--text-muted); pointer-events: none; background: transparent; border: none;">Memuat list...</li>
-        </ul>
+            <ul id="menu-list">
+                <li class="empty-list">
+                    <i class="ph-duotone ph-spinner-gap"></i>
+                    Memuat library...
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>Community resources online</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="title-group">
+                    <button
+                        class="mobile-menu"
+                        type="button"
+                        aria-label="Buka menu"
+                        onclick="openSidebar()"
+                    >
+                        <i class="ph-bold ph-list"></i>
+                    </button>
+
+                    <div class="title-icon">
+                        <i id="content-icon" class="ph-bold ph-terminal-window"></i>
+                    </div>
+
+                    <div class="title-copy">
+                        <h2 id="content-title">Pilih script dari library</h2>
+                        <p id="content-type">Script preview</p>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <a
+                        class="icon-btn whatsapp"
+                        href="https://whatsapp.com/channel/0029VbDd3WGCnA7vWfsEBE3y"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Gabung saluran WhatsApp"
+                        aria-label="Gabung saluran WhatsApp"
+                    >
+                        <i class="ph-bold ph-whatsapp-logo"></i>
+                    </a>
+
+                    <button
+                        id="copy-btn"
+                        class="copy-btn"
+                        type="button"
+                        onclick="copyText()"
+                    >
+                        <i class="ph-bold ph-copy"></i>
+                        <span>Salin kode</span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="workspace">
+                <div class="editor" id="editor">
+                    <div class="editor-header">
+                        <div class="window-controls" aria-hidden="true">
+                            <span class="window-dot"></span>
+                            <span class="window-dot"></span>
+                            <span class="window-dot"></span>
+                        </div>
+
+                        <div class="file-meta">
+                            <i class="ph-bold ph-file-code"></i>
+                            <span id="file-name">preview.lua</span>
+                        </div>
+                    </div>
+
+                    <div class="editor-body">
+                        <pre><code id="raw-content">-- Pilih script dari library untuk melihat kode.</code></pre>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <div class="content">
-        <!-- Content Header -->
-        <div class="header">
-            <div class="header-title" id="content-title">
-                <i class="ph-bold ph-terminal-window"></i> 
-                <span>Pilih item di sidebar</span>
-            </div>
-            
-            <div class="header-actions">
-                <div class="credits">Forkt Community</div>
-                
-                <a href="https://whatsapp.com/channel/0029VbDd3WGCnA7vWfsEBE3y" target="_blank" class="wa-btn" title="Join Saluran WA">
-                    <i class="ph-bold ph-whatsapp-logo"></i>
-                </a>
-                
-                <button id="copy-btn" class="copy-btn" onclick="copyText()">
-                    <i class="ph-bold ph-copy"></i> Copy
-                </button>
-            </div>
-        </div>
+    <div class="overlay" onclick="closeSidebar()"></div>
 
-        <!-- Editor Box -->
-        <div class="raw-container">
-            <div class="code-box">
-                <div class="code-header">
-                    <div class="mac-dot dot-red"></div>
-                    <div class="mac-dot dot-yellow"></div>
-                    <div class="mac-dot dot-green"></div>
-                </div>
-                <pre><code id="raw-content">-- // Menunggu pilihan...</code></pre>
-            </div>
-        </div>
+    <div class="toast" id="toast">
+        <i class="ph-bold ph-check-circle"></i>
+        <span>Kode berhasil disalin</span>
     </div>
 
     <script>
-        const menuList = document.getElementById('menu-list');
-        const contentTitle = document.querySelector('#content-title span');
-        const contentIcon = document.querySelector('#content-title i');
-        const rawContent = document.getElementById('raw-content');
-        const copyBtn = document.getElementById('copy-btn');
-        const codeBox = document.querySelector('.code-box');
+        const menuList = document.getElementById("menu-list");
+        const listCount = document.getElementById("list-count");
+        const searchInput = document.getElementById("search-input");
 
-        // Menyimpan data mentah dari JSON untuk filter
-        let scriptDataArray = [];
+        const contentTitle = document.getElementById("content-title");
+        const contentType = document.getElementById("content-type");
+        const contentIcon = document.getElementById("content-icon");
+
+        const rawContent = document.getElementById("raw-content");
+        const copyBtn = document.getElementById("copy-btn");
+        const fileName = document.getElementById("file-name");
+        const editor = document.getElementById("editor");
+        const toast = document.getElementById("toast");
+
+        let scriptData = [];
+        let activeFilter = "all";
+        let activeItem = null;
+        let toastTimer;
+
+        function escapeHTML(value = "") {
+            const element = document.createElement("div");
+            element.textContent = String(value);
+            return element.innerHTML;
+        }
+
+        function openSidebar() {
+            document.body.classList.add("sidebar-open");
+        }
+
+        function closeSidebar() {
+            document.body.classList.remove("sidebar-open");
+        }
 
         async function loadMenu() {
             try {
-                // Fetch config.json
-                const response = await fetch('config.json');
-                if (!response.ok) throw new Error('Gagal memuat konfigurasi');
-                
-                scriptDataArray = await response.json();
-                renderList(scriptDataArray);
+                const response = await fetch("config.json", {
+                    cache: "no-store"
+                });
 
-                // Otomatis pilih item pertama saat halaman pertama kali dibuka
-                if (scriptDataArray.length > 0) {
-                    const firstItemElement = menuList.firstElementChild;
-                    selectMenuItem(scriptDataArray[0], firstItemElement);
+                if (!response.ok) {
+                    throw new Error("Gagal memuat config.json");
                 }
 
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Format config.json tidak valid");
+                }
+
+                scriptData = data;
+                applyFilters();
+
+                if (scriptData.length > 0) {
+                    selectMenuItem(scriptData[0]);
+                }
             } catch (error) {
-                menuList.innerHTML = `<li style="color: #ef4444; text-align:center; background: transparent; border: none;">Gagal memuat config.json</li>`;
+                menuList.innerHTML = `
+                    <li class="empty-list" style="color:#fca5a5">
+                        <i class="ph-duotone ph-warning-circle"></i>
+                        Gagal memuat <strong>config.json</strong>
+                    </li>
+                `;
+
+                listCount.textContent = "0";
+                rawContent.textContent =
+                    "-- Error: config.json gagal dimuat.\n" +
+                    "-- Pastikan file tersedia dan format JSON valid.";
             }
         }
 
-        // Render List DOM berdasarkan data
-        function renderList(dataArray) {
-            menuList.innerHTML = '';
-            
-            if(dataArray.length === 0) {
-                menuList.innerHTML = `<li style="text-align: center; color: var(--text-muted); background: transparent; border: none;">Tidak ada data ditemukan</li>`;
+        function applyFilters() {
+            const keyword = searchInput.value.trim().toLowerCase();
+
+            const filteredData = scriptData.filter(item => {
+                const type = item.type || "script";
+                const matchesType =
+                    activeFilter === "all" || type === activeFilter;
+
+                const searchableText = [
+                    item.title,
+                    item.description,
+                    item.type
+                ].join(" ").toLowerCase();
+
+                return matchesType && searchableText.includes(keyword);
+            });
+
+            renderList(filteredData);
+        }
+
+        function renderList(data) {
+            listCount.textContent = data.length;
+            menuList.innerHTML = "";
+
+            if (!data.length) {
+                menuList.innerHTML = `
+                    <li class="empty-list">
+                        <i class="ph-duotone ph-magnifying-glass"></i>
+                        Script tidak ditemukan.
+                    </li>
+                `;
                 return;
             }
 
-            dataArray.forEach((item) => {
-                const li = document.createElement('li');
-                
-                // Set custom data attribute untuk filter logic
-                li.setAttribute('data-type', item.type || 'script');
+            data.forEach(item => {
+                const type = item.type === "loadstring"
+                    ? "loadstring"
+                    : "script";
 
-                const isLoadstring = item.type === 'loadstring';
-                const iconClass = isLoadstring ? 'ph-bold ph-terminal-window' : 'ph-bold ph-file-code';
-                const badgeText = isLoadstring ? 'Loadstring' : 'Script';
-                const badgeClass = isLoadstring ? 'badge-loadstring' : 'badge-script';
-                
-                li.innerHTML = `
-                    <div class="item-top">
-                        <div class="item-title">
-                            <i class="${iconClass} item-icon"></i> 
-                            ${item.title}
-                        </div>
-                        <span class="item-badge ${badgeClass}">${badgeText}</span>
+                const isLoadstring = type === "loadstring";
+                const itemElement = document.createElement("li");
+
+                itemElement.className =
+                    "menu-item" + (activeItem === item ? " active" : "");
+
+                itemElement.innerHTML = `
+                    <div class="menu-icon">
+                        <i class="${
+                            isLoadstring
+                                ? "ph-bold ph-terminal-window"
+                                : "ph-bold ph-file-code"
+                        }"></i>
                     </div>
-                    ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
+
+                    <div class="menu-content">
+                        <div class="menu-title-row">
+                            <div class="menu-title">
+                                ${escapeHTML(item.title || "Tanpa judul")}
+                            </div>
+
+                            <span class="badge ${
+                                isLoadstring
+                                    ? "badge-loadstring"
+                                    : "badge-script"
+                            }">
+                                ${isLoadstring ? "Load" : "Script"}
+                            </span>
+                        </div>
+
+                        ${
+                            item.description
+                                ? `<div class="menu-description">${
+                                    escapeHTML(item.description)
+                                }</div>`
+                                : ""
+                        }
+                    </div>
                 `;
-                
-                li.onclick = () => selectMenuItem(item, li);
-                menuList.appendChild(li);
-            });
-        }
 
-        // Logic Filter Pill Tab
-        function filterList(filterType, element) {
-            // Update Active State di Pills
-            document.querySelectorAll('.pill').forEach(pill => pill.classList.remove('active'));
-            element.classList.add('active');
+                itemElement.addEventListener("click", () => {
+                    selectMenuItem(item);
 
-            // Hide/Show logic via CSS class
-            const listItems = menuList.querySelectorAll('li');
-            listItems.forEach(li => {
-                if (filterType === 'all') {
-                    li.classList.remove('hidden');
-                } else {
-                    if (li.getAttribute('data-type') === filterType) {
-                        li.classList.remove('hidden');
-                    } else {
-                        li.classList.add('hidden');
+                    if (window.innerWidth <= 760) {
+                        closeSidebar();
                     }
-                }
+                });
+
+                menuList.appendChild(itemElement);
             });
         }
 
-        async function selectMenuItem(item, element) {
-            // Hapus class active dari semua li
-            document.querySelectorAll('#menu-list li').forEach(el => el.classList.remove('active'));
-            // Tambahkan ke element yang di klik
-            if(element) element.classList.add('active');
+        async function selectMenuItem(item) {
+            activeItem = item;
+            applyFilters();
 
-            // Set Loading State
-            contentTitle.textContent = "Loading data...";
-            rawContent.textContent = "Loading...";
-            copyBtn.style.display = 'none';
-            
-            // Ubah icon di header sesuai tipe
-            if (item.type === 'loadstring') {
-                contentIcon.className = 'ph-bold ph-terminal-window';
-            } else {
-                contentIcon.className = 'ph-bold ph-file-code';
+            const isLoadstring = item.type === "loadstring";
+
+            contentTitle.textContent = item.title || "Tanpa judul";
+            contentType.textContent = isLoadstring
+                ? "Loadstring"
+                : "Lua script";
+
+            contentIcon.className = isLoadstring
+                ? "ph-bold ph-terminal-window"
+                : "ph-bold ph-file-code";
+
+            fileName.textContent = isLoadstring
+                ? "loadstring.lua"
+                : getDisplayFileName(item);
+
+            rawContent.textContent = "-- Memuat kode...";
+            copyBtn.style.display = "none";
+
+            replayEditorAnimation();
+
+            if (isLoadstring) {
+                rawContent.textContent =
+                    item.code ||
+                    "-- Loadstring belum tersedia di config.json";
+
+                copyBtn.style.display = "flex";
+                return;
             }
-            
-            // Re-trigger animasi popup
-            codeBox.style.animation = 'none';
-            codeBox.offsetHeight; 
-            codeBox.style.animation = 'slideUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
 
-            // Logika Loadstring vs Script (File fetch)
-            if (item.type === 'loadstring') {
-                contentTitle.textContent = item.title;
-                rawContent.textContent = item.code || '-- Loadstring belum diisi di config.json';
-                copyBtn.style.display = 'flex';
-            } else {
-                try {
-                    // Gunakan fallback path jika file property tidak ada
-                    const filePath = item.file || 'data/' + item.title.replace(/\s/g, '') + '.lua';
-                    const response = await fetch(filePath);
-                    
-                    if (!response.ok) throw new Error('File tidak ditemukan');
-                    
-                    const textData = await response.text();
-                    contentTitle.textContent = item.title;
-                    rawContent.textContent = textData;
-                    copyBtn.style.display = 'flex'; 
-                } catch (error) {
-                    contentTitle.textContent = item.title;
-                    rawContent.textContent = "-- Error: Gagal memuat file script.\n-- Pastikan path file benar di config.json.";
-                    copyBtn.style.display = 'flex';
+            try {
+                const path = item.file || createFallbackPath(item.title);
+                const response = await fetch(path, { cache: "no-store" });
+
+                if (!response.ok) {
+                    throw new Error("File script tidak ditemukan");
                 }
+
+                rawContent.textContent = await response.text();
+            } catch (error) {
+                rawContent.textContent =
+                    "-- Error: Gagal memuat file script.\n" +
+                    "-- Pastikan path file pada config.json sudah benar.";
             }
+
+            copyBtn.style.display = "flex";
         }
 
-        function copyText() {
-            const textToCopy = rawContent.textContent;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const originalHTML = copyBtn.innerHTML;
-                copyBtn.innerHTML = `<i class="ph-bold ph-check"></i> Copied!`;
-                copyBtn.style.background = '#10b981'; // Hijau Emerald
-                copyBtn.style.color = '#ffffff';
-                
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalHTML;
-                    copyBtn.style.background = '#fff';
-                    copyBtn.style.color = '#000';
-                }, 2000);
+        function createFallbackPath(title = "") {
+            const safeName = title.replace(/\s+/g, "");
+            return `data/${safeName}.lua`;
+        }
+
+        function getDisplayFileName(item) {
+            const path = item.file || createFallbackPath(item.title);
+            return path.split("/").pop() || "script.lua";
+        }
+
+        function replayEditorAnimation() {
+            editor.style.animation = "none";
+            void editor.offsetHeight;
+            editor.style.animation = "";
+        }
+
+        async function copyText() {
+            try {
+                await navigator.clipboard.writeText(rawContent.textContent);
+            } catch (error) {
+                const textarea = document.createElement("textarea");
+                textarea.value = rawContent.textContent;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand("copy");
+                textarea.remove();
+            }
+
+            copyBtn.classList.add("success");
+            copyBtn.innerHTML = `
+                <i class="ph-bold ph-check"></i>
+                <span>Tersalin</span>
+            `;
+
+            showToast();
+
+            setTimeout(() => {
+                copyBtn.classList.remove("success");
+                copyBtn.innerHTML = `
+                    <i class="ph-bold ph-copy"></i>
+                    <span>Salin kode</span>
+                `;
+            }, 1800);
+        }
+
+        function showToast() {
+            clearTimeout(toastTimer);
+            toast.classList.add("show");
+
+            toastTimer = setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2200);
+        }
+
+        document.querySelectorAll(".filter-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll(".filter-btn").forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                button.classList.add("active");
+                activeFilter = button.dataset.filter;
+                applyFilters();
             });
-        }
+        });
 
-        // Initialize script
+        searchInput.addEventListener("input", applyFilters);
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeSidebar();
+            }
+
+            if (
+                (event.ctrlKey || event.metaKey) &&
+                event.key.toLowerCase() === "k"
+            ) {
+                event.preventDefault();
+
+                if (window.innerWidth <= 760) {
+                    openSidebar();
+                }
+
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        });
+
         loadMenu();
     </script>
 </body>
