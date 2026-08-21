@@ -163,16 +163,9 @@
         }
 
         .sidebar {
-            position: relative;
-            z-index: 30;
-            min-width: 0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border-right: 1px solid var(--border);
-            background: rgba(9, 9, 15, .88);
-            box-shadow: 20px 0 60px rgba(0, 0, 0, .18);
-            backdrop-filter: blur(28px);
         }
 
         .main {
@@ -304,125 +297,168 @@
 
 
         /* Filter tabs */
+        .sidebar-header,
+        .list-heading,
+        .sidebar-footer {
+            flex-shrink: 0;
+        }
 
         .filters {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 4px;
+            display: flex;
+            gap: 5px;
             margin-top: 12px;
             padding: 4px;
             overflow-x: auto;
+            scrollbar-width: none;
             border: 1px solid var(--border);
             border-radius: 14px;
             background: rgba(255, 255, 255, .025);
         }
 
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+        
         .filter-btn {
-            min-width: 0;
-            padding: 8px 4px;
+            min-width: max-content;
+            flex: 1 0 auto;
+            min-height: 34px;
+            padding: 0 12px;
             border: 0;
             border-radius: 10px;
             color: var(--text-muted);
             background: transparent;
             cursor: pointer;
             font-size: 10px;
-            font-weight: 800;
+            font-weight: 750;
             white-space: nowrap;
-            transition: .2s ease;
+            transition:
+                color .2s ease,
+                background .2s ease,
+                box-shadow .2s ease;
         }
-
+        
         .filter-btn:hover {
             color: var(--text);
+            background: rgba(255, 255, 255, .035);
         }
-
+        
         .filter-btn.active {
             color: white;
             background: var(--surface-active);
             box-shadow:
-                0 4px 14px rgba(0, 0, 0, .28),
-                inset 0 1px rgba(255, 255, 255, .05);
+                0 3px 12px rgba(0, 0, 0, .28),
+                inset 0 1px rgba(255, 255, 255, .06);
         }
 
-
         /* List */
-
         .list-heading {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 21px 9px;
+            min-height: 49px;
+            padding: 13px 18px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .035);
             color: var(--text-muted);
+            background: rgba(9, 9, 15, .96);
             font-size: 10px;
             font-weight: 800;
             letter-spacing: 1.4px;
             text-transform: uppercase;
         }
-
+        
         .list-count {
-            min-width: 24px;
-            height: 23px;
-            display: grid;
+            min-width: 25px;
+            height: 24px;
+            display: inline-grid;
             place-items: center;
             padding: 0 7px;
+            border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text-soft);
-            background: rgba(255, 255, 255, .055);
+            background: rgba(255, 255, 255, .05);
+            font-size: 10px;
             letter-spacing: 0;
         }
-
+        
+        /* Area scroll utama */
         #menu-list {
-            flex: 1;
+            min-height: 0;
+            flex: 1 1 auto;
             display: flex;
             flex-direction: column;
             gap: 7px;
+            margin: 0;
+            padding: 9px 10px 18px;
+            overflow-x: hidden;
             overflow-y: auto;
-            padding: 0 12px 18px;
+            overscroll-behavior: contain;
+            scroll-behavior: smooth;
+            scrollbar-gutter: stable;
             list-style: none;
         }
 
         .menu-item {
             position: relative;
-            display: flex;
-            gap: 12px;
-            padding: 13px;
+            min-width: 0;
+            min-height: 64px;
+            flex: 0 0 auto;
+            display: grid;
+            grid-template-columns: 38px minmax(0, 1fr);
+            align-items: center;
+            gap: 11px;
+            padding: 11px 12px;
             overflow: hidden;
             border: 1px solid transparent;
-            border-radius: 15px;
+            border-radius: 14px;
+            background: transparent;
             cursor: pointer;
-            transition: .24s var(--ease);
+        
+            /* Membantu performa jika list sangat banyak */
+            content-visibility: auto;
+            contain-intrinsic-size: 64px;
+        
+            transition:
+                border-color .2s ease,
+                background .2s ease,
+                box-shadow .2s ease;
         }
-
+        
         .menu-item:hover {
-            border-color: rgba(255, 255, 255, .055);
+            border-color: rgba(255, 255, 255, .07);
             background: rgba(255, 255, 255, .035);
-            transform: translateX(2px);
+        
+            /* Jangan gunakan translateX karena dapat membuat list terpotong */
+            transform: none;
         }
-
+        
         .menu-item.active {
             border-color: rgba(139, 92, 246, .24);
-            background:
-                linear-gradient(
-                    100deg,
-                    rgba(139, 92, 246, .14),
-                    rgba(139, 92, 246, .035)
-                );
-            box-shadow:
-                inset 3px 0 var(--purple),
-                0 8px 30px rgba(0, 0, 0, .12);
+            background: linear-gradient(
+                100deg,
+                rgba(139, 92, 246, .14),
+                rgba(139, 92, 246, .035)
+            );
+            box-shadow: inset 3px 0 var(--purple);
         }
-
+        
         .menu-icon {
             width: 38px;
             height: 38px;
-            flex: 0 0 38px;
             display: grid;
             place-items: center;
+            align-self: center;
+            overflow: hidden;
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 11px;
             color: var(--text-soft);
             background: rgba(255, 255, 255, .035);
-            font-size: 18px;
-            transition: .2s ease;
+            font-size: 17px;
+        }
+        
+        .menu-icon i {
+            display: block;
+            line-height: 1;
         }
 
         .menu-item.active .menu-icon {
@@ -432,16 +468,13 @@
         }
 
         .menu-item[data-type="rbxm"].active {
-            border-color: rgba(59, 130, 246, .24);
-            background:
-                linear-gradient(
-                    100deg,
-                    rgba(59, 130, 246, .14),
-                    rgba(59, 130, 246, .035)
-                );
-            box-shadow:
-                inset 3px 0 var(--blue),
-                0 8px 30px rgba(0, 0, 0, .12);
+            border-color: rgba(59, 130, 246, .25);
+            background: linear-gradient(
+                100deg,
+                rgba(59, 130, 246, .14),
+                rgba(59, 130, 246, .035)
+            );
+            box-shadow: inset 3px 0 var(--blue);
         }
 
         .menu-item[data-type="rbxm"].active .menu-icon {
@@ -452,46 +485,53 @@
 
         .menu-content {
             min-width: 0;
-            flex: 1;
+            overflow: hidden;
         }
-
+        
         .menu-title-row {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            min-width: 0;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
             gap: 8px;
         }
-
+        
         .menu-title {
+            min-width: 0;
             overflow: hidden;
             color: #ededf4;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
-            line-height: 1.55;
+            line-height: 1.45;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .menu-description {
+            min-width: 0;
+            margin-top: 4px;
+            overflow: hidden;
+            color: var(--text-muted);
+            font-size: 10px;
+            line-height: 1.45;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        .menu-description {
-            display: -webkit-box;
-            margin-top: 4px;
-            overflow: hidden;
-            color: var(--text-muted);
-            font-size: 11px;
-            line-height: 1.55;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-        }
-
         .badge {
-            flex: 0 0 auto;
+            min-width: 38px;
+            max-width: 60px;
             padding: 4px 6px;
+            overflow: hidden;
             border: 1px solid;
             border-radius: 6px;
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 800;
-            letter-spacing: .45px;
-            text-transform: uppercase;
+            line-height: 1;
+            letter-spacing: .35px;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .badge-script {
@@ -527,8 +567,12 @@
         }
 
         .sidebar-footer {
-            padding: 14px 18px;
+            position: relative;
+            z-index: 2;
+            min-height: 44px;
+            padding: 12px 17px;
             border-top: 1px solid var(--border);
+            background: rgba(9, 9, 15, .97);
         }
 
         .online-status {
@@ -1404,6 +1448,281 @@
                 transition-duration: .01ms !important;
             }
         }
+        @media (max-width: 760px) {
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+                height: 100dvh;
+                z-index: 30;
+                overflow: hidden;
+            }
+            .sidebar-overlay {
+                z-index: 20;
+            }
+            .sidebar-header {
+                flex-shrink: 0;
+            }
+        
+            .sidebar-header {
+                padding: 17px 16px 14px;
+            }
+        
+            .search-box {
+                margin-top: 16px;
+            }
+        
+            .filters {
+                width: 100%;
+                padding: 4px;
+            }
+        
+            .filter-btn {
+                min-height: 33px;
+                padding: 0 11px;
+                font-size: 9px;
+            }
+        
+            .list-heading {
+                flex-shrink: 0;
+            }
+            
+            #menu-list {
+                flex: 1 1 0;
+                min-height: 0;
+                overflow-y: auto;
+            }
+        
+            .menu-item {
+                min-width: 0;
+                min-height: 64px;
+                flex: 0 0 auto;
+                display: grid;
+                grid-template-columns: 38px minmax(0, 1fr);
+                align-items: center;
+                gap: 11px;
+                padding: 11px 12px;
+                overflow: hidden;
+                border-radius: 14px;
+            }
+        
+            .menu-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                font-size: 16px;
+            }
+        
+            .menu-title {
+                font-size: 11.5px;
+            }
+        
+            .menu-description {
+                font-size: 9.5px;
+            }
+        
+            .badge {
+                min-width: 35px;
+                max-width: 50px;
+                padding: 4px 5px;
+                font-size: 6.5px;
+            }
+        
+            .sidebar-footer {
+                flex-shrink: 0;
+            }
+        }
+        .empty-list {
+            display: flex;
+            min-height: 180px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    
+        .empty-list i {
+            margin: 0;
+        }
+    
+        .menu-item.is-loading {
+            opacity: 0.65;
+            pointer-events: none;
+        }
+    
+        .menu-item:focus-visible {
+            outline: 2px solid rgba(139, 92, 246, 0.7);
+            outline-offset: -2px;
+        }
+    
+        .menu-item[aria-current="true"] {
+            border-color: rgba(139, 92, 246, 0.25);
+        }
+        /* ===== Animasi tab & list yang lebih ringan ===== */
+        .filter-btn {
+            position: relative;
+            min-width: max-content;
+            flex: 1 0 auto;
+            min-height: 34px;
+            padding: 0 12px;
+            border: 0;
+            border-radius: 10px;
+            color: var(--text-muted);
+            background: transparent;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 750;
+            white-space: nowrap;
+            transform: translateZ(0);
+            will-change: transform;
+            transition:
+                color 180ms ease,
+                background-color 180ms ease,
+                box-shadow 180ms ease,
+                transform 160ms ease;
+        }
+        
+        .filter-btn:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, .035);
+            transform: translateY(-1px);
+        }
+        
+        .filter-btn:active {
+            transform: scale(.97);
+        }
+        
+        .filter-btn.active {
+            color: white;
+            background: var(--surface-active);
+            box-shadow:
+                0 3px 12px rgba(0, 0, 0, .28),
+                inset 0 1px rgba(255, 255, 255, .06);
+        }
+        
+        /* wadah list */
+        #menu-list {
+            min-height: 0;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin: 0;
+            padding: 9px 10px 18px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scroll-behavior: smooth;
+            scrollbar-gutter: stable;
+            list-style: none;
+            transform: translateZ(0);
+            will-change: opacity, transform;
+        }
+        
+        .menu-item {
+            position: relative;
+            min-width: 0;
+            min-height: 64px;
+            flex: 0 0 auto;
+            display: grid;
+            grid-template-columns: 38px minmax(0, 1fr);
+            align-items: center;
+            gap: 11px;
+            padding: 11px 12px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background: transparent;
+            cursor: pointer;
+            content-visibility: auto;
+            contain-intrinsic-size: 64px;
+            transform: translateZ(0);
+            will-change: transform;
+            transition:
+                background-color 180ms ease,
+                border-color 180ms ease,
+                box-shadow 180ms ease;
+        }
+        
+        .menu-item:hover {
+            border-color: rgba(255, 255, 255, .07);
+            background: rgba(255, 255, 255, .035);
+            transform: none;
+        }
+        
+        .menu-icon,
+        .badge {
+            transition:
+                transform 180ms ease,
+                color 180ms ease,
+                background-color 180ms ease;
+        }
+        
+        .menu-item:hover .menu-icon {
+            transform: scale(1.04);
+        }
+        
+        .menu-item:active {
+            background-color: rgba(255, 255, 255, .055);
+        }
+        
+        .list-count {
+            transition:
+                opacity 150ms ease,
+                transform 150ms ease;
+        }
+        
+        .empty-list {
+            display: flex;
+            min-height: 180px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .empty-list i {
+            margin: 0;
+        }
+        
+        .menu-item.is-loading {
+            opacity: 0.65;
+            pointer-events: none;
+        }
+        
+        .menu-item:focus-visible {
+            outline: 2px solid rgba(139, 92, 246, 0.7);
+            outline-offset: -2px;
+        }
+        
+        .menu-item[aria-current="true"] {
+            border-color: rgba(139, 92, 246, 0.25);
+        }
+        
+        .content-switch-animation {
+            animation: contentSwitchIn 220ms cubic-bezier(.22, 1, .36, 1);
+        }
+        
+        @keyframes contentSwitchIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+        
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 
@@ -1773,19 +2092,6 @@
 
 
         /* =====================================================
-           INITIALIZE RBXM DATA
-        ===================================================== */
-
-        try {
-            rbxmItems = JSON.parse(
-                document.getElementById("rbxm-data").textContent
-            );
-        } catch (error) {
-            rbxmItems = [];
-        }
-
-
-        /* =====================================================
            HELPERS
         ===================================================== */
         async function loadRbxmFromGitHub() {
@@ -1843,6 +2149,19 @@
                         { numeric: true }
                     )
                 );
+        }
+        function animateContentSwitch() {
+            const content =
+                document.querySelector(".panel-shell") ||
+                document.querySelector(".main-content") ||
+                document.querySelector(".content-area") ||
+                document.querySelector("main");
+        
+            if (!content) return;
+        
+            content.classList.remove("content-switch-animation");
+            void content.offsetWidth;
+            content.classList.add("content-switch-animation");
         }
         function escapeHTML(value = "") {
             const element = document.createElement("div");
@@ -1975,17 +2294,16 @@
         /* =====================================================
            FILTER & SEARCH
         ===================================================== */
-
         function applyFilters() {
             const keyword = searchInput.value
                 .trim()
                 .toLowerCase();
-
+        
             const filteredItems = allItems.filter(item => {
                 const matchesType =
                     activeFilter === "all" ||
                     item.type === activeFilter;
-
+        
                 const searchableText = [
                     item.title,
                     item.description,
@@ -1996,96 +2314,256 @@
                     .filter(Boolean)
                     .join(" ")
                     .toLowerCase();
-
+        
                 return (
                     matchesType &&
                     searchableText.includes(keyword)
                 );
             });
-
-            renderList(filteredItems);
+        
+            const activeButton = document.querySelector(
+                `.filter-btn[data-filter="${activeFilter}"]`
+            );
+        
+            if (activeButton) {
+                animateFilterChange(filteredItems, activeButton);
+            } else {
+                renderList(filteredItems);
+            }
         }
 
-        function renderList(items) {
-            menuList.innerHTML = "";
-            listCount.textContent = items.length;
-
-            if (items.length === 0) {
-                menuList.innerHTML = `
-                    <li class="empty-list">
-                        <i class="ph-duotone ph-magnifying-glass"></i>
-                        Tidak ada file yang ditemukan.
-                    </li>
-                `;
-
+        function renderList(items = []) {
+            menuList.replaceChildren();
+        
+            const validItems = Array.isArray(items) ? items : [];
+            listCount.textContent =
+            validItems.length.toLocaleString("id-ID");
+        
+            if (validItems.length === 0) {
+                const emptyItem = document.createElement("li");
+                emptyItem.className = "empty-list";
+        
+                const emptyIcon = document.createElement("i");
+                emptyIcon.className = "ph-duotone ph-magnifying-glass";
+        
+                const emptyText = document.createElement("span");
+                emptyText.textContent = "Tidak ada file yang ditemukan.";
+        
+                emptyItem.append(emptyIcon, emptyText);
+                menuList.appendChild(emptyItem);
                 return;
             }
-
-            items.forEach(item => {
-                const listItem = document.createElement("li");
-                const isActive = activeItemId === item.id;
-
-                listItem.className =
-                    `menu-item${isActive ? " active" : ""}`;
-
-                listItem.dataset.type = item.type;
-
+        
+            const fragment = document.createDocumentFragment();
+        
+            validItems.forEach((item, index) => {
+                const type = ["script", "loadstring", "rbxm"].includes(item.type)
+                    ? item.type
+                    : "script";
+        
+                const title = String(item.title || item.fileName || "Tanpa judul");
+        
                 let iconClass = "ph-bold ph-file-code";
                 let badgeClass = "badge-script";
-                let badgeText = "Script";
-                let description =
-                    item.description || "Luau script resource";
-
-                if (item.type === "loadstring") {
+                let badgeText = "SCRIPT";
+                let description = String(item.description || "Luau script");
+        
+                if (type === "loadstring") {
                     iconClass = "ph-bold ph-terminal-window";
                     badgeClass = "badge-loadstring";
-                    badgeText = "Load";
-                    description =
-                        item.description || "Luau loadstring";
+                    badgeText = "LOAD";
+                    description = String(
+                        item.description || "Luau loadstring"
+                    );
                 }
-
-                if (item.type === "rbxm") {
+        
+                if (type === "rbxm") {
                     iconClass = "ph-duotone ph-cube";
                     badgeClass = "badge-rbxm";
                     badgeText = "RBXM";
-                    description = `${formatFileSize(item.size)} • Roblox Model`;
+                    description = `${formatFileSize(item.size || 0)} • Roblox Model`;
                 }
-
-                listItem.innerHTML = `
-                    <div class="menu-icon">
-                        <i class="${iconClass}"></i>
-                    </div>
-
-                    <div class="menu-content">
-                        <div class="menu-title-row">
-                            <div class="menu-title">
-                                ${escapeHTML(item.title || "Tanpa judul")}
-                            </div>
-
-                            <span class="badge ${badgeClass}">
-                                ${badgeText}
-                            </span>
-                        </div>
-
-                        <div class="menu-description">
-                            ${escapeHTML(description)}
-                        </div>
-                    </div>
-                `;
-
-                listItem.addEventListener("click", async () => {
-                    await selectItem(item);
-
-                    if (window.innerWidth <= 760) {
-                        closeSidebar();
+        
+                /* Item utama */
+                const listItem = document.createElement("li");
+        
+                listItem.className = "menu-item";
+                listItem.dataset.type = type;
+                listItem.dataset.index = String(index);
+                listItem.tabIndex = 0;
+                listItem.setAttribute("role", "button");
+                listItem.setAttribute("aria-label", `Buka ${title}`);
+        
+                if (activeItemId === item.id) {
+                    listItem.classList.add("active");
+                    listItem.setAttribute("aria-current", "true");
+                }
+        
+                /* Ikon */
+                const iconContainer = document.createElement("div");
+                iconContainer.className = "menu-icon";
+                iconContainer.setAttribute("aria-hidden", "true");
+        
+                const icon = document.createElement("i");
+                icon.className = iconClass;
+        
+                iconContainer.appendChild(icon);
+        
+                /* Konten */
+                const content = document.createElement("div");
+                content.className = "menu-content";
+        
+                const titleRow = document.createElement("div");
+                titleRow.className = "menu-title-row";
+        
+                const titleElement = document.createElement("div");
+                titleElement.className = "menu-title";
+                titleElement.textContent = title;
+                titleElement.title = title;
+        
+                const badge = document.createElement("span");
+                badge.className = `badge ${badgeClass}`;
+                badge.textContent = badgeText;
+                badge.setAttribute("aria-label", `Tipe ${badgeText}`);
+        
+                const descriptionElement = document.createElement("div");
+                descriptionElement.className = "menu-description";
+                descriptionElement.textContent = description;
+                descriptionElement.title = description;
+        
+                titleRow.append(titleElement, badge);
+                content.append(titleRow, descriptionElement);
+                listItem.append(iconContainer, content);
+        
+                /* Membuka item */
+                const openItem = async () => {
+                    if (listItem.classList.contains("is-loading")) {
+                        return;
+                    }
+        
+                    listItem.classList.add("is-loading");
+                    listItem.setAttribute("aria-busy", "true");
+        
+                    try {
+                        await selectItem(item);
+        
+                        if (window.innerWidth <= 760) {
+                            closeSidebar();
+                        }
+                    } catch (error) {
+                        console.error("Gagal membuka item:", error);
+                    } finally {
+                        listItem.classList.remove("is-loading");
+                        listItem.removeAttribute("aria-busy");
+                    }
+                };
+        
+                listItem.addEventListener("click", openItem);
+        
+                listItem.addEventListener("keydown", event => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openItem();
                     }
                 });
-
-                menuList.appendChild(listItem);
+        
+                fragment.appendChild(listItem);
             });
+        
+            menuList.appendChild(fragment);
         }
+        let filterAnimationId = 0;
 
-
+        async function animateFilterChange(items, activeButton) {
+            const animationId = ++filterAnimationId;
+            const reduceMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches;
+        
+            document
+                .querySelectorAll(".filter-btn")
+                .forEach(button => {
+                    const isActive = button === activeButton;
+                    button.classList.toggle("active", isActive);
+                    button.setAttribute("aria-selected", String(isActive));
+                });
+        
+            if (reduceMotion) {
+                renderList(items);
+                return;
+            }
+        
+            menuList.getAnimations().forEach(animation => {
+                animation.cancel();
+            });
+        
+            listCount.getAnimations().forEach(animation => {
+                animation.cancel();
+            });
+        
+            const exitAnimation = menuList.animate(
+                [
+                    {
+                        opacity: 1,
+                        transform: "translate3d(0, 0, 0)"
+                    },
+                    {
+                        opacity: 0,
+                        transform: "translate3d(0, 4px, 0)"
+                    }
+                ],
+                {
+                    duration: 90,
+                    easing: "ease-out",
+                    fill: "forwards"
+                }
+            );
+        
+            try {
+                await exitAnimation.finished;
+            } catch {
+                return;
+            }
+        
+            if (animationId !== filterAnimationId) return;
+        
+            renderList(items);
+        
+            menuList.animate(
+                [
+                    {
+                        opacity: 0,
+                        transform: "translate3d(0, 6px, 0)"
+                    },
+                    {
+                        opacity: 1,
+                        transform: "translate3d(0, 0, 0)"
+                    }
+                ],
+                {
+                    duration: 220,
+                    easing: "cubic-bezier(.22, 1, .36, 1)",
+                    fill: "both"
+                }
+            );
+        
+            listCount.animate(
+                [
+                    {
+                        opacity: 0,
+                        transform: "scale(.9)"
+                    },
+                    {
+                        opacity: 1,
+                        transform: "scale(1)"
+                    }
+                ],
+                {
+                    duration: 180,
+                    easing: "cubic-bezier(.22, 1, .36, 1)"
+                }
+            );
+        }
         /* =====================================================
            SELECT ITEM
         ===================================================== */
@@ -2098,7 +2576,7 @@
                 showRbxmPreview(item);
                 return;
             }
-
+            animateContentSwitch();
             await showScriptPreview(item);
         }
 
@@ -2351,16 +2829,35 @@
             .querySelectorAll(".filter-btn")
             .forEach(button => {
                 button.addEventListener("click", () => {
-                    document
-                        .querySelectorAll(".filter-btn")
-                        .forEach(filterButton => {
-                            filterButton.classList.remove("active");
-                        });
-
-                    button.classList.add("active");
                     activeFilter = button.dataset.filter;
-
-                    applyFilters();
+        
+                    const keyword = searchInput.value
+                        .trim()
+                        .toLowerCase();
+        
+                    const filteredItems = allItems.filter(item => {
+                        const matchesType =
+                            activeFilter === "all" ||
+                            item.type === activeFilter;
+        
+                        const searchableText = [
+                            item.title,
+                            item.description,
+                            item.fileName,
+                            item.file,
+                            item.type
+                        ]
+                            .filter(Boolean)
+                            .join(" ")
+                            .toLowerCase();
+        
+                        return (
+                            matchesType &&
+                            searchableText.includes(keyword)
+                        );
+                    });
+        
+                    animateFilterChange(filteredItems, button);
                 });
             });
 
