@@ -36,7 +36,7 @@
     "code": "loadstring(game:HttpGet('https://pastebin.com/rbmJ8WXj'))()"
   },
   {
-    "title": "Model Replacer ( Delta ) | Bug Rotate",
+    "title": "Model Replacer",
     "description": "Mengubah Model Obstacle Secara Banyak",
     "type": "loadstring",
     "code": "loadstring(game:HttpGet('https://pastebin.com/9krzbkAu'))()"
