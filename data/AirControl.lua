@@ -186,6 +186,6 @@ end
 RunService.PreSimulation:Connect(updateMovement)
 
 print("----------------------------------------")
-print("[InstantMovement] Berhasil dimuat")
-print("[InstantMovement] Credits: Forkt Community")
+print("[AirControl] Berhasil dimuat")
+print("[AitControl] By: Forkt Community")
 print("----------------------------------------")
