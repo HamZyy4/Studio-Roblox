@@ -51,7 +51,7 @@
     "title": "CharOptmizer",
     "description": "mengoptimalkan efek kosmetik pemain lain berdasarkan jarak ( Reduce Lag )",
     "type": "script",
-    "file": "data/CharOptmizer.lua"
+    "file": "data/CharOptimizer.lua"
   },
   {
     "title": "PhysicsStabilizer",
