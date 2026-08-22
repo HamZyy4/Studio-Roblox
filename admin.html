@@ -6,20 +6,20 @@
     <title>FORKTV7 - Admin Panel</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         :root {
-            /* Premium Dark Palette */
+            /* Premium Dark Theme */
             --bg-base: #050505;
             --bg-surface: #0a0a0c;
-            --bg-surface-2: #141419;
+            --bg-surface-2: #121217;
             --border-color: rgba(255, 255, 255, 0.08);
             
-            /* Text Colors */
+            /* Typography Colors */
             --text-primary: #f8fafc;
             --text-secondary: #8b949e;
             --text-muted: #525866;
@@ -27,11 +27,15 @@
             /* Accents */
             --primary-purple: #8B5CF6;
             --purple-light: #A78BFA;
-            --purple-glow: rgba(139, 92, 246, 0.2);
+            --purple-glow: rgba(139, 92, 246, 0.15);
             --danger: #ef4444;
-            --danger-glow: rgba(239, 68, 68, 0.2);
             --warning: #f59e0b;
             --success: #10b981;
+            
+            /* Metrics */
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 8px;
         }
 
         * {
@@ -48,154 +52,157 @@
             min-height: 100vh;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 50% 0%, var(--purple-glow), transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05), transparent 40%);
+                radial-gradient(circle at 50% 0%, var(--purple-glow), transparent 50%);
+            background-attachment: fixed;
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
-        /* ================= VIEW STATES ================= */
+        /* ================= SPA VIEW STATES ================= */
         .view {
             display: none;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            animation: fadeIn 0.4s ease forwards;
         }
         .view.active {
             display: flex;
             flex-direction: column;
-            opacity: 1;
             min-height: 100vh;
         }
 
-        /* ================= LOGIN SCREEN ================= */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* ================= 1. LOGIN SCREEN ================= */
         #login-view {
             justify-content: center;
             align-items: center;
-            position: relative;
+            padding: 20px;
         }
 
         .login-card {
-            background: var(--bg-surface);
+            background: rgba(10, 10, 12, 0.8);
             border: 1px solid var(--border-color);
-            padding: 40px;
-            border-radius: 24px;
+            padding: 40px 32px;
+            border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 2;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
         }
 
         .login-logo {
             width: 64px; height: 64px;
             background: linear-gradient(135deg, var(--primary-purple), var(--purple-light));
-            border-radius: 16px;
+            border-radius: var(--radius-md);
             display: flex; align-items: center; justify-content: center;
             font-size: 28px; font-weight: 800; color: #fff;
-            margin: 0 auto 20px auto;
+            margin: 0 auto 24px auto;
             box-shadow: 0 10px 25px var(--purple-glow);
         }
 
-        .login-card h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px; }
-        .login-card p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 30px; }
+        .login-card h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .login-card p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 32px; }
 
-        .input-icon-group {
+        .input-group-auth {
             position: relative;
             margin-bottom: 24px;
         }
-        .input-icon-group i {
+        .input-group-auth i {
             position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
             color: var(--text-secondary); font-size: 20px;
         }
-        .input-icon-group input {
+        .input-group-auth input {
             width: 100%;
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
             padding: 16px 16px 16px 48px;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             color: var(--text-primary);
             font-size: 1rem; outline: none; transition: 0.3s;
         }
-        .input-icon-group input:focus {
+        .input-group-auth input:focus {
             border-color: var(--primary-purple);
-            background: rgba(255,255,255,0.05);
-            box-shadow: 0 0 0 4px var(--purple-glow);
+            background: rgba(255,255,255,0.06);
+            box-shadow: 0 0 0 3px var(--purple-glow);
         }
 
         .btn-login {
             width: 100%; padding: 16px;
-            background: var(--text-primary);
-            color: var(--bg-base);
-            border: none; border-radius: 12px;
+            background: var(--text-primary); color: var(--bg-base);
+            border: none; border-radius: var(--radius-md);
             font-size: 1rem; font-weight: 700;
-            cursor: pointer; transition: 0.3s;
+            cursor: pointer; transition: 0.2s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-login:hover {
-            background: #e2e8f0; transform: translateY(-2px);
-        }
+        .btn-login:hover { background: #e2e8f0; transform: translateY(-2px); }
 
-        /* ================= ADMIN DASHBOARD ================= */
+        /* ================= 2. DASHBOARD NAV ================= */
         .topbar {
             height: 70px;
             border-bottom: 1px solid var(--border-color);
-            background: rgba(10, 10, 12, 0.8);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 12, 0.85);
+            backdrop-filter: blur(16px);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 32px;
-            position: sticky; top: 0; z-index: 10;
+            position: sticky; top: 0; z-index: 50;
         }
 
         .topbar-brand { display: flex; align-items: center; gap: 12px; }
-        .topbar-brand .logo-mini {
-            background: var(--primary-purple); width: 32px; height: 32px;
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 14px;
+        .logo-mini {
+            background: var(--primary-purple); width: 34px; height: 34px;
+            border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 14px; box-shadow: 0 2px 10px var(--purple-glow);
         }
         .topbar-brand span { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.2px; }
 
         .topbar-user { display: flex; align-items: center; gap: 20px; }
-        .user-info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; }
-        .user-info i { font-size: 20px; color: var(--text-secondary); }
-        
+        .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); }
+        .user-info i { font-size: 22px; color: var(--text-primary); }
+        .user-info span { color: var(--text-primary); }
+
         .btn-logout {
             background: rgba(239, 68, 68, 0.1); color: var(--danger);
-            border: 1px solid var(--danger-glow);
-            padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 8px 16px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.85rem;
             cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
         .btn-logout:hover { background: var(--danger); color: #fff; }
 
-        /* Dashboard Layout */
+        /* ================= DASHBOARD GRID ================= */
         .dashboard-container {
             max-width: 1400px; margin: 0 auto; width: 100%;
-            padding: 32px; display: grid; gap: 24px;
-            grid-template-columns: 380px 1fr;
+            padding: 32px;
+            display: grid; 
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            align-items: start; /* Prevents stretching */
         }
 
         .panel {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
-            border-radius: 16px; padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: var(--radius-lg); padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             display: flex; flex-direction: column;
         }
+        
         .panel-header {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 20px; padding-bottom: 16px;
+            margin-bottom: 24px; padding-bottom: 16px;
             border-bottom: 1px solid var(--border-color);
         }
-        .panel-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .panel-title i { color: var(--primary-purple); font-size: 20px; }
+        .panel-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .panel-title i { color: var(--primary-purple); font-size: 22px; }
 
-        /* Forms */
-        .form-group { margin-bottom: 16px; }
+        /* Form Elements */
+        .form-group { margin-bottom: 18px; }
         .form-group label {
             display: flex; justify-content: space-between;
             font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;
@@ -203,26 +210,28 @@
         .helper-text { font-size: 0.75rem; color: var(--primary-purple); }
 
         input, textarea, select {
-            width: 100%; background: rgba(255, 255, 255, 0.03);
+            width: 100%; background: var(--bg-surface-2);
             border: 1px solid var(--border-color); color: var(--text-primary);
-            padding: 12px 16px; border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.2s;
+            padding: 14px 16px; border-radius: var(--radius-md); font-size: 0.95rem; outline: none; transition: 0.2s;
+            font-family: inherit;
         }
         input:focus, textarea:focus, select:focus {
-            border-color: var(--primary-purple); background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-purple); background: rgba(255,255,255,0.05);
         }
 
-        .input-group { display: flex; align-items: center; }
+        /* Combined Input (Prefix) */
+        .input-group { display: flex; align-items: stretch; }
         .input-group-prefix {
-            background: var(--bg-surface-2); border: 1px solid var(--border-color);
-            border-right: none; padding: 12px 16px; border-radius: 10px 0 0 10px;
+            background: var(--bg-base); border: 1px solid var(--border-color);
+            border-right: none; padding: 14px 16px; border-radius: var(--radius-md) 0 0 var(--radius-md);
             color: var(--text-secondary); font-size: 0.95rem; font-weight: 500;
+            display: flex; align-items: center;
         }
-        .input-group input { border-radius: 0 10px 10px 0; border-left: 1px solid var(--border-color); }
-        .input-group input:focus { border-left-color: var(--primary-purple); }
+        .input-group input { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
 
-        /* Buttons Action */
+        /* Buttons */
         .btn {
-            padding: 12px 20px; border: none; border-radius: 10px;
+            padding: 14px 20px; border: none; border-radius: var(--radius-md);
             font-weight: 600; font-size: 0.95rem; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; width: 100%;
         }
@@ -230,23 +239,26 @@
         .btn-primary:hover { background: #7c3aed; transform: translateY(-2px); box-shadow: 0 4px 15px var(--purple-glow); }
         .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
         .btn-outline:hover { background: rgba(255,255,255,0.05); }
+        .btn-warning { background: var(--warning); color: #000; }
+        .btn-warning:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        /* List UI */
+        /* ================= LIST UI ================= */
         .list-container {
             display: flex; flex-direction: column; gap: 12px;
-            max-height: 500px; overflow-y: auto; padding-right: 5px; margin-bottom: 16px;
+            max-height: 550px; overflow-y: auto; padding-right: 6px; margin-bottom: 20px;
         }
         .list-item {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color);
-            padding: 16px; border-radius: 12px; display: flex; justify-content: space-between;
-            align-items: flex-start; transition: 0.2s;
+            background: var(--bg-surface-2); border: 1px solid var(--border-color);
+            padding: 18px; border-radius: var(--radius-md); 
+            display: flex; justify-content: space-between; align-items: flex-start; 
+            transition: 0.2s; gap: 16px;
         }
-        .list-item:hover { background: var(--bg-surface-2); border-color: rgba(255,255,255,0.15); }
+        .list-item:hover { border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.03); }
         
         .item-info { flex: 1; min-width: 0; }
-        .item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-        .item-info h4 { font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item-info p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 6px; }
+        .item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+        .item-info h4 { font-size: 1.05rem; font-weight: 600; color: #fff; line-height: 1.2; }
+        .item-info p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.4; }
         
         .item-badge {
             font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;
@@ -257,49 +269,76 @@
 
         .item-path { 
             font-size: 0.8rem; color: var(--primary-purple); font-family: 'Fira Code', monospace; 
-            display: flex; align-items: center; gap: 6px; background: rgba(139, 92, 246, 0.05);
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(139, 92, 246, 0.05);
             padding: 6px 10px; border-radius: 6px; word-break: break-all; border: 1px dashed rgba(139, 92, 246, 0.2);
         }
 
-        .item-actions { display: flex; gap: 8px; margin-left: 16px; }
+        .item-actions { display: flex; gap: 8px; }
         .item-actions button {
-            background: var(--bg-surface-2); border: 1px solid var(--border-color);
-            border-radius: 8px; color: var(--text-primary); font-size: 1.1rem;
+            background: var(--bg-base); border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1.2rem;
             cursor: pointer; padding: 10px; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
         }
         .edit-btn:hover { color: var(--warning); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.1); }
-        .del-btn:hover { color: var(--danger); border-color: var(--danger-glow); background: rgba(239, 68, 68, 0.1); }
+        .del-btn:hover { color: var(--danger); border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); }
 
         /* Manual Import Area */
         .import-area {
-            margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 16px;
+            border-top: 1px solid var(--border-color); padding-top: 16px;
         }
-        .import-area label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px; display:block; font-weight: 500;}
+        .import-area label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; display:block; font-weight: 500;}
+        .import-box { display: flex; gap: 10px; }
 
-        /* JSON Output Panel (Full Width) */
+        /* ================= JSON OUTPUT ================= */
         .json-panel { grid-column: 1 / -1; }
-        .json-header-actions { display: flex; gap: 10px; }
+        .json-header-actions { display: flex; gap: 12px; }
         .json-header-actions button {
-            padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; width: auto; font-weight: 600;
+            padding: 8px 16px; font-size: 0.85rem; border-radius: var(--radius-sm); width: auto; font-weight: 600;
         }
         .json-output {
-            background: #09090b; border: 1px solid var(--border-color); border-radius: 12px;
+            background: #09090b; border: 1px solid var(--border-color); border-radius: var(--radius-md);
             padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.85rem;
-            color: #34d399; max-height: 400px; overflow-y: auto; line-height: 1.5;
+            color: #34d399; max-height: 400px; overflow-y: auto; overflow-x: auto; line-height: 1.6;
+            white-space: pre;
         }
 
-        /* ================= MOBILE RESPONSIVE ================= */
-        @media (max-width: 900px) {
-            .dashboard-container { grid-template-columns: 1fr; padding: 20px; gap: 20px; }
-            .topbar { padding: 0 20px; }
-            .user-info span { display: none; } /* Hide text, show only icon */
+        /* ================= RESPONSIVE DESIGN ================= */
+        
+        /* TABLET (Max 1024px) */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr; /* Stack vertically */
+                gap: 24px;
+            }
+        }
+
+        /* MOBILE (Max 768px) */
+        @media (max-width: 768px) {
+            .topbar { padding: 0 20px; height: 65px; }
+            .topbar-brand span { display: none; } /* Hide text, show only logo to save space */
+            .user-info span { display: none; } /* Hide username text */
             
-            .list-item { flex-direction: column; gap: 16px; }
-            .item-actions { margin-left: 0; width: 100%; display: flex; }
-            .item-actions button { flex: 1; justify-content: center; display: flex; }
-            .json-panel { grid-column: 1 / -1; }
-            .json-header-actions { flex-direction: column; }
+            .dashboard-container { padding: 16px; gap: 16px; }
+            .panel { padding: 20px; }
+            
+            /* Ubah List item menjadi stack di HP */
+            .list-item { flex-direction: column; }
+            .item-actions { 
+                width: 100%; 
+                display: grid; 
+                grid-template-columns: 1fr 1fr; /* Tombol Edit/Delete bersebelahan penuh */
+                margin-top: 8px;
+            }
+            .item-actions button { padding: 12px; font-size: 1.3rem; } /* Tombol lebih besar untuk jari */
+
+            .import-box { flex-direction: column; }
+            .import-box button { width: 100%; }
+
+            .json-header-actions { flex-direction: column; width: 100%; }
             .json-header-actions button { width: 100%; }
+            .panel-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .json-panel .panel-header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -312,7 +351,7 @@
             <h1>FORKTV7</h1>
             <p>Admin Studio Authentication</p>
             
-            <div class="input-icon-group">
+            <div class="input-group-auth">
                 <i class="ph-bold ph-user"></i>
                 <input type="text" id="usernameInput" placeholder="Enter Username..." autocomplete="off" onkeypress="handleEnter(event)">
             </div>
@@ -339,15 +378,15 @@
                     <span id="displayUsername">Admin</span>
                 </div>
                 <button class="btn-logout" onclick="logout()">
-                    <i class="ph-bold ph-sign-out"></i> Logout
+                    <i class="ph-bold ph-sign-out"></i> <span>Logout</span>
                 </button>
             </div>
         </nav>
 
-        <!-- Main Grid Layout -->
+        <!-- Main Content -->
         <div class="dashboard-container">
             
-            <!-- KOLOM KIRI: ENTRY FORM -->
+            <!-- COLUMN 1: ENTRY FORM -->
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="ph-fill ph-pencil-line"></i> Entry Data</h2>
@@ -374,7 +413,7 @@
                         <input type="text" id="inputDesc" placeholder="Brief explanation">
                     </div>
 
-                    <!-- Input for Local File -->
+                    <!-- Input Local File -->
                     <div class="form-group" id="fieldFile">
                         <label>
                             <span>Filename (.lua)</span>
@@ -386,7 +425,7 @@
                         </div>
                     </div>
 
-                    <!-- Input for Loadstring -->
+                    <!-- Input Loadstring -->
                     <div class="form-group" id="fieldCode" style="display: none;">
                         <label>Loadstring URL/Code</label>
                         <textarea id="inputCode" rows="4" placeholder="loadstring(game:HttpGet('...'))()"></textarea>
@@ -401,11 +440,11 @@
                 </form>
             </div>
 
-            <!-- KOLOM KANAN: LIST DATA -->
+            <!-- COLUMN 2: ACTIVE LIST -->
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="ph-fill ph-list-bullets"></i> Active Configurations</h2>
-                    <span style="font-size: 0.8rem; font-weight:600; background: var(--bg-surface-2); padding: 4px 10px; border-radius: 20px;" id="totalItems">0 Items</span>
+                    <span style="font-size: 0.8rem; font-weight:600; background: var(--bg-surface-2); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color);" id="totalItems">0 Items</span>
                 </div>
                 
                 <div class="list-container" id="listContainer">
@@ -415,16 +454,16 @@
                 <!-- Manual Import -->
                 <div class="import-area">
                     <label>Import Config from JSON Code:</label>
-                    <div style="display: flex; gap: 8px;">
+                    <div class="import-box">
                         <input type="text" id="importInput" placeholder='Paste JSON array [...]'>
-                        <button class="btn btn-outline" style="width: auto; padding: 0 20px;" onclick="importJSON()">Import</button>
+                        <button class="btn btn-outline" style="width: 120px;" onclick="importJSON()">Import</button>
                     </div>
                 </div>
             </div>
 
-            <!-- KOLOM BAWAH (FULL WIDTH): JSON OUTPUT -->
+            <!-- COLUMN 3 (FULL WIDTH): JSON OUTPUT -->
             <div class="panel json-panel">
-                <div class="panel-header" style="margin-bottom: 12px; padding-bottom: 12px;">
+                <div class="panel-header" style="margin-bottom: 16px; padding-bottom: 16px;">
                     <h2 class="panel-title"><i class="ph-fill ph-braces"></i> config.json Output</h2>
                     <div class="json-header-actions">
                         <button class="btn btn-primary" onclick="copyJSON()">
@@ -443,7 +482,7 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        // --- AUTHENTICATION (USERNAME ONLY) ---
+        // --- AUTHENTICATION ---
         function handleLogin() {
             const user = document.getElementById('usernameInput').value.trim();
             if(user.length < 3) {
@@ -451,17 +490,13 @@
                 return;
             }
             
-            // Set Username to Dashboard
             document.getElementById('displayUsername').innerText = user;
             
-            // Switch View
             document.getElementById('login-view').classList.remove('active');
-            
-            // Timeout kecil untuk transisi smooth
             setTimeout(() => {
                 document.getElementById('admin-view').classList.add('active');
-                initData(); // Fetch Data setelah berhasil login
-            }, 300);
+                initData(); 
+            }, 50);
         }
 
         function handleEnter(e) {
@@ -473,10 +508,10 @@
             setTimeout(() => {
                 document.getElementById('login-view').classList.add('active');
                 document.getElementById('usernameInput').value = '';
-            }, 300);
+            }, 50);
         }
 
-        // --- DASHBOARD LOGIC (CONFIG MANAGER) ---
+        // --- DASHBOARD CRUD LOGIC ---
         let configData = [];
         const form = document.getElementById('dataForm');
         const inputType = document.getElementById('inputType');
@@ -484,7 +519,6 @@
         const submitBtn = document.getElementById('submitBtn');
         const cancelBtn = document.getElementById('cancelBtn');
 
-        // Initial Data Fetch
         async function initData() {
             try {
                 const response = await fetch('config.json?t=' + new Date().getTime());
@@ -554,11 +588,10 @@
             }
 
             submitBtn.innerHTML = '<i class="ph-bold ph-check"></i> Save Changes';
-            submitBtn.style.background = 'var(--warning)';
-            submitBtn.style.color = '#000';
+            submitBtn.className = 'btn btn-warning'; // Change color to warning
             cancelBtn.style.display = 'flex';
             
-            if(window.innerWidth <= 900) form.scrollIntoView({behavior: "smooth"});
+            if(window.innerWidth <= 1024) form.scrollIntoView({behavior: "smooth", block: "start"});
         }
 
         function deleteItem(index) {
@@ -574,8 +607,7 @@
             editIndex.value = -1;
             toggleFields();
             submitBtn.innerHTML = '<i class="ph-bold ph-plus-circle"></i> Add to Config';
-            submitBtn.style.background = 'var(--primary-purple)';
-            submitBtn.style.color = '#fff';
+            submitBtn.className = 'btn btn-primary';
             cancelBtn.style.display = 'none';
         }
 
@@ -585,7 +617,7 @@
             document.getElementById('totalItems').innerText = `${configData.length} Items`;
 
             if(configData.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding: 40px 20px;"><i class="ph-fill ph-package" style="font-size: 40px; margin-bottom: 10px; opacity:0.5;"></i><br>No configurations found. Add one!</div>';
+                listContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding: 40px 20px;"><i class="ph-fill ph-package" style="font-size: 40px; margin-bottom: 12px; opacity:0.3;"></i><br>No configurations found. Add one!</div>';
             }
 
             configData.forEach((item, index) => {
@@ -595,7 +627,7 @@
                     '<span class="item-badge badge-script">Script File</span>';
                 
                 const subtext = isLoadstring ? 
-                    `<span class="item-path"><i class="ph-bold ph-link"></i> ${item.code.substring(0, 45)}${item.code.length > 45 ? '...' : ''}</span>` : 
+                    `<span class="item-path"><i class="ph-bold ph-link"></i> ${item.code.substring(0, 40)}${item.code.length > 40 ? '...' : ''}</span>` : 
                     `<span class="item-path"><i class="ph-bold ph-folder"></i> ${item.file}</span>`;
 
                 listContainer.innerHTML += `
