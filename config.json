@@ -9,7 +9,7 @@
     "title": "Toolbox SL",
     "description": "Loadstring untuk Script Toolbox",
     "type": "loadstring",
-    "code": "loadstring(game:HttpGet('https://pastebin.com/raw/QX6ZE2pt'))()"
+    "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/HamZyy4/Script/refs/heads/main/ToolBox.lua'))()"
   },
   {
     "title": "Animated Decal Part",
@@ -33,13 +33,13 @@
     "title": "Object Mover SL",
     "description": "Memindahkan Model,Part,Mesh,Dll Ke Depan Camera",
     "type": "loadstring",
-    "code": "loadstring(game:HttpGet('https://pastebin.com/rbmJ8WXj'))()"
+    "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/HamZyy4/Script/refs/heads/main/ObjectMover.lua'))()"
   },
   {
     "title": "Model Replacer",
     "description": "Mengubah Model Obstacle Secara Banyak",
     "type": "loadstring",
-    "code": "loadstring(game:HttpGet('https://pastebin.com/9krzbkAu'))()"
+    "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/HamZyy4/Script/refs/heads/main/Replacer.lua'))()"
   },
   {
     "title": "SmoothRotate Jump",
