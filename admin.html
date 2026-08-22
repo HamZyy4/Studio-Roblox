@@ -13,21 +13,21 @@
 
     <style>
         :root {
-            /* Warna Tepat Sesuai Referensi Gambar Mobile */
+            /* Palette sesuai referensi Dark Mode */
             --bg-base: #050505;
             --bg-panel-desktop: #0a0a0c;
             --bg-input: #121217;
             --bg-card: #0d0d12;
             
-            --border-color: rgba(255, 255, 255, 0.05);
-            --border-input: rgba(255, 255, 255, 0.08);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-input: rgba(255, 255, 255, 0.1);
             
-            /* Typography Colors */
+            /* Text Colors */
             --text-primary: #f8fafc;
             --text-secondary: #8b949e;
             --text-muted: #525866;
             
-            /* Accents (Sesuai Referensi) */
+            /* Accents */
             --primary-purple: #8B5CF6;
             --purple-light: #A78BFA;
             --purple-bg: rgba(139, 92, 246, 0.1);
@@ -40,7 +40,7 @@
             
             --warning: #f59e0b;
             
-            /* Metrics */
+            /* Border Radius */
             --radius-lg: 16px;
             --radius-md: 10px;
             --radius-sm: 8px;
@@ -58,16 +58,15 @@
             background-color: var(--bg-base);
             color: var(--text-primary);
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Mencegah layar geser ke samping */
             background-attachment: fixed;
         }
 
-        /* Scrollbar Halus */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
 
-        /* ================= SPA VIEW STATES ================= */
+        /* ================= SPA VIEWS ================= */
         .view {
             display: none;
             opacity: 0;
@@ -81,7 +80,7 @@
 
         @keyframes fadeIn { to { opacity: 1; } }
 
-        /* ================= 1. LOGIN SCREEN ================= */
+        /* ================= LOGIN SCREEN ================= */
         #login-view {
             justify-content: center;
             align-items: center;
@@ -107,7 +106,7 @@
         .login-card h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
         .login-card p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 32px; }
         
-        .input-group-auth { position: relative; margin-bottom: 24px; }
+        .input-group-auth { position: relative; margin-bottom: 24px; width: 100%; }
         .input-group-auth i {
             position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
             color: var(--text-secondary); font-size: 20px;
@@ -127,14 +126,14 @@
             font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
 
-        /* ================= 2. DASHBOARD NAV ================= */
+        /* ================= DASHBOARD NAV ================= */
         .topbar {
             height: 65px;
             border-bottom: 1px solid var(--border-color);
             background: rgba(5, 5, 5, 0.9);
             backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px; position: sticky; top: 0; z-index: 50;
+            padding: 0 24px; position: sticky; top: 0; z-index: 50;
         }
         .topbar-brand { display: flex; align-items: center; gap: 12px; }
         .logo-mini {
@@ -155,10 +154,11 @@
             cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
 
-        /* ================= DASHBOARD LAYOUT (DESKTOP BASE) ================= */
+        /* ================= DASHBOARD MAIN LAYOUT ================= */
         .dashboard-container {
             max-width: 1300px; margin: 0 auto; width: 100%;
-            padding: 32px; display: grid; gap: 24px;
+            padding: 32px 24px 60px 24px; /* Padding bawah 60px agar tidak kepotong saat mentok scroll */
+            display: grid; gap: 24px;
             grid-template-columns: 400px 1fr;
             align-items: start;
         }
@@ -168,6 +168,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg); padding: 24px;
             display: flex; flex-direction: column;
+            width: 100%;
         }
         .panel-header {
             display: flex; align-items: center; justify-content: space-between;
@@ -176,8 +177,8 @@
         .panel-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .panel-title i { color: var(--primary-purple); font-size: 22px; }
 
-        /* Formulir Entry */
-        .form-group { margin-bottom: 20px; }
+        /* ================= FORM ELEMENTS ================= */
+        .form-group { margin-bottom: 20px; width: 100%; }
         .form-group label {
             display: flex; justify-content: space-between;
             font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500;
@@ -192,9 +193,9 @@
             border-color: var(--border-color);
         }
 
-        /* Group Prefix 'data/' persis foto */
+        /* Input Group (Data Prefix) Anti Meleset */
         .input-group {
-            display: flex; align-items: stretch;
+            display: flex; align-items: stretch; width: 100%;
             background: var(--bg-input); border-radius: var(--radius-md);
             border: 1px solid transparent; overflow: hidden;
         }
@@ -203,11 +204,23 @@
             padding: 14px 16px; color: var(--text-secondary);
             background: rgba(0,0,0,0.3); border-right: 1px solid var(--border-color);
             display: flex; align-items: center; font-size: 0.95rem;
+            flex-shrink: 0; /* Mencegah text data/ menyusut di HP */
         }
-        .input-group input { border: none; background: transparent; border-radius: 0; }
+        .input-group input { 
+            flex: 1; min-width: 0; /* min-width:0 penting agar input tidak meluber */
+            border: none; background: transparent; border-radius: 0; 
+        }
         .input-group input:focus { border: none; }
 
-        /* Tombol */
+        /* Form Actions (Bungkus tombol agar rapi & tidak kepotong) */
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+            width: 100%;
+        }
+
         .btn {
             padding: 16px; border: none; border-radius: var(--radius-md);
             font-weight: 600; font-size: 0.95rem; cursor: pointer;
@@ -215,9 +228,10 @@
         }
         .btn-primary { background: var(--primary-purple); color: #fff; }
         .btn-primary:active { transform: scale(0.98); }
+        .btn-warning { background: var(--warning); color: #000; }
         .btn-outline { background: transparent; border: 1px solid var(--border-input); color: var(--text-primary); }
 
-        /* List Konfigurasi */
+        /* ================= LIST KONFIGURASI ================= */
         .list-container {
             display: flex; flex-direction: column; gap: 12px;
             max-height: 550px; overflow-y: auto; padding-right: 4px; margin-bottom: 20px;
@@ -226,6 +240,7 @@
             background: var(--bg-card); border: 1px solid var(--border-color);
             padding: 20px; border-radius: var(--radius-lg); 
             display: flex; flex-direction: column; gap: 12px; transition: 0.2s;
+            width: 100%;
         }
         
         .item-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -244,17 +259,19 @@
             font-size: 0.8rem; color: var(--purple-light); font-family: 'Fira Code', monospace; 
             display: inline-flex; align-items: center; gap: 8px; background: rgba(168, 85, 247, 0.05);
             padding: 8px 12px; border-radius: 8px; word-break: break-all; border: 1px dashed rgba(168, 85, 247, 0.2);
-            margin-top: 4px;
+            margin-top: 4px; width: 100%;
         }
 
         .item-actions { 
-            display: flex; gap: 8px; margin-top: 8px; 
-            border-top: 1px solid var(--border-color); padding-top: 16px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; /* Pasti 50/50 dan Rapi */
+            margin-top: 8px; border-top: 1px solid var(--border-color); padding-top: 16px;
+            width: 100%;
         }
         .item-actions button {
             background: var(--bg-input); border: 1px solid var(--border-color);
             border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;
-            cursor: pointer; padding: 10px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+            cursor: pointer; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
+            width: 100%;
         }
 
         .count-badge {
@@ -262,30 +279,34 @@
             padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--text-primary);
         }
 
-        /* JSON Output Panel */
-        .json-panel { grid-column: 1 / -1; }
+        /* ================= MANUAL IMPORT & JSON ================= */
+        .import-area { border-top: 1px solid var(--border-color); padding-top: 16px; width: 100%; }
+        .import-area label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; display:block; font-weight: 500;}
+        .import-box { display: flex; gap: 10px; width: 100%; }
+        .import-box input { flex: 1; min-width: 0; }
+        .import-box button { width: auto; padding: 0 20px; }
+
+        .json-panel { grid-column: 1 / -1; width: 100%; }
         .json-header-actions { display: flex; gap: 12px; }
-        .json-header-actions button { padding: 10px 16px; font-size: 0.85rem; border-radius: var(--radius-sm); width: auto;}
+        .json-header-actions button { padding: 10px 16px; font-size: 0.85rem; width: auto;}
+        
         .json-output {
             background: #09090b; border: 1px solid var(--border-color); border-radius: var(--radius-md);
             padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.85rem;
-            color: #34d399; max-height: 400px; overflow-y: auto; overflow-x: auto;
+            color: #34d399; max-height: 400px; overflow-y: auto; overflow-x: auto; width: 100%;
         }
 
-        /* ================= DETEKSI OTOMATIS (RESPONSIVE MOBILE) ================= */
+        /* ================= MOBILE LAYOUT FIX ================= */
         @media (max-width: 800px) {
-            /* Topbar Compact */
-            .topbar { padding: 0 16px; height: 60px; }
-            .topbar-brand span { display: none; } /* Sembunyikan text logo */
-            .user-info span { display: none; } /* Sembunyikan nama user */
+            .topbar { padding: 0 16px; }
+            .topbar-brand span, .user-info span { display: none; } 
             
-            /* Container Merapat ke Tepi */
             .dashboard-container {
                 grid-template-columns: 1fr; 
-                padding: 16px; gap: 24px;
+                padding: 16px 16px 60px 16px; /* Padding bawah aman */
+                gap: 20px;
             }
 
-            /* Hapus Background/Border Panel agar menyatu dengan body persis seperti difoto */
             .panel {
                 background: transparent;
                 border: none;
@@ -296,13 +317,13 @@
                 border-bottom: none; gap: 12px; margin-bottom: 16px; padding-bottom: 0;
             }
             
-            /* Pill Item sejajar kiri bawah judul */
             .count-badge { align-self: flex-start; }
             
-            /* Action Button List merata 50/50 */
-            .item-actions { flex-direction: row; }
-            .item-actions button { font-size: 0.9rem; padding: 12px; }
+            /* Import Area Flex to Column */
+            .import-box { flex-direction: column; }
+            .import-box button { width: 100%; padding: 14px; }
             
+            /* JSON Actions Flex to Grid/Column */
             .json-header-actions { flex-direction: column; width: 100%; }
             .json-header-actions button { width: 100%; }
         }
@@ -394,12 +415,15 @@
                         <textarea id="inputCode" rows="3" placeholder="loadstring(game:HttpGet('...'))()"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        <i class="ph-bold ph-plus-circle"></i> Add to Config
-                    </button>
-                    <button type="button" class="btn btn-outline" style="margin-top: 12px; display: none;" id="cancelBtn" onclick="resetForm()">
-                        Cancel Edit
-                    </button>
+                    <!-- Bungkus Form Action Agar Tidak Kepotong -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            Add to Config
+                        </button>
+                        <button type="button" class="btn btn-outline" style="display: none;" id="cancelBtn" onclick="resetForm()">
+                            Cancel Edit
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -413,6 +437,15 @@
                 <div class="list-container" id="listContainer">
                     <!-- Data List Injected Here -->
                 </div>
+                
+                <!-- Manual Import -->
+                <div class="import-area">
+                    <label>Import Config from JSON Code:</label>
+                    <div class="import-box">
+                        <input type="text" id="importInput" placeholder='Paste JSON array [...]'>
+                        <button class="btn btn-outline" onclick="importJSON()">Import</button>
+                    </div>
+                </div>
             </div>
 
             <!-- COLUMN 3: JSON OUTPUT -->
@@ -420,10 +453,10 @@
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="ph-fill ph-braces"></i> config.json Output</h2>
                     <div class="json-header-actions">
-                        <button class="btn btn-primary" style="padding: 10px 20px" onclick="copyJSON()">
+                        <button class="btn btn-primary" onclick="copyJSON()">
                             <i class="ph-bold ph-copy"></i> Copy Code
                         </button>
-                        <button class="btn btn-outline" style="padding: 10px 20px" onclick="downloadJSON()">
+                        <button class="btn btn-outline" onclick="downloadJSON()">
                             <i class="ph-bold ph-download-simple"></i> Download
                         </button>
                     </div>
@@ -541,12 +574,12 @@
                 document.getElementById('inputCode').value = item.code || '';
             }
 
-            submitBtn.innerHTML = '<i class="ph-bold ph-check"></i> Save Changes';
-            submitBtn.style.background = 'var(--warning)';
-            submitBtn.style.color = '#000';
+            submitBtn.innerHTML = 'Save Changes';
+            submitBtn.className = 'btn btn-warning'; 
             cancelBtn.style.display = 'flex';
             
-            if(window.innerWidth <= 800) form.scrollIntoView({behavior: "smooth", block: "start"});
+            // Scroll sedikit ke form dengan aman
+            form.scrollIntoView({behavior: "smooth", block: "center"});
         }
 
         function deleteItem(index) {
@@ -561,9 +594,8 @@
             form.reset();
             editIndex.value = -1;
             toggleFields();
-            submitBtn.innerHTML = '<i class="ph-bold ph-plus-circle"></i> Add to Config';
-            submitBtn.style.background = 'var(--primary-purple)';
-            submitBtn.style.color = '#fff';
+            submitBtn.innerHTML = 'Add to Config';
+            submitBtn.className = 'btn btn-primary';
             cancelBtn.style.display = 'none';
         }
 
